@@ -8,7 +8,7 @@ function LogoDesktop({NoDivider}) {
       <img
         src={desktopLogo}
         alt="SpaceSaver desktop logo"
-        className="mt-[-3rem]"
+        className="mt-[-2.3rem] mb-[-2rem]"
       />
       {!NoDivider && <Divider />}
     </div>

@@ -19,7 +19,7 @@ body {
 }
 
 .active {
-  @apply bg-blue-600 text-white;
+  @apply bg-blue-600 text-white shadow-2xl;
 }
 
 .nav-hover {

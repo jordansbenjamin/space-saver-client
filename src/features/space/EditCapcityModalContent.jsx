@@ -31,11 +31,11 @@ function EditCapacityModalContent({heading}) {
 
   return (
     <>
-      <h4 className="mt-[-.6rem] font-coplette text-3xl">{heading}</h4>
+      <h4 className="mt-[-.6rem] font-coplette text-3xl pt-4">{heading}</h4>
       <form
         onSubmit={handleSubmit(onSubmit)}
         onReset={handleReset}
-        className="flex w-64 flex-col items-center justify-center gap-8"
+        className="flex w-64 flex-col items-center justify-center gap-6 py-3"
       >
         <Controller
           name="capacity"

@@ -31,11 +31,11 @@ function EditDescriptionModalContent({heading}) {
 
   return (
     <>
-      <h4 className="mt-[-.6rem] font-coplette text-3xl">{heading}</h4>
+      <h4 className="mt-[-.6rem] font-coplette text-3xl pt-4">{heading}</h4>
       <form
         onSubmit={handleSubmit(onSubmit)}
         onReset={handleReset}
-        className="flex w-96 flex-col items-center gap-1"
+        className="flex w-[33rem] flex-col items-center gap-3 py-4"
       >
         <Controller
           name="description"
@@ -65,7 +65,7 @@ function EditDescriptionModalContent({heading}) {
           )}
         />
 
-        <div className="mb-[-1rem]">
+        <div className="mb-[-1rem] mt-2">
           <Button variant="contained" type="submit">
             Confirm
           </Button>

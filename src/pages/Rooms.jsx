@@ -112,9 +112,10 @@ function Rooms() {
                 <Link to={`/rooms/${room.name}/${room._id}`} key={room._id}>
                   <DashItem
                     key={room.name}
-                    styling="w-[20rem] h-[14.5rem]"
+                    styling="w-[18rem] h-[14.5rem]"
                     heading={room.name}
                     headingStyling="self-center my-auto"
+                    allowHoverEffect
                   />
                 </Link>
               ))
@@ -129,10 +130,11 @@ function Rooms() {
             {isAdmin && menuOption !== 'Booked Rooms' && (
               <button onClick={handleOpen}>
                 <DashItem
-                  styling="w-[20rem] h-[14.5rem]"
+                  styling="w-[18rem] h-[14.5rem]"
                   heading="Create room +"
                   bgColor="bg-slate-300"
                   headingStyling="self-center my-auto"
+                  allowHoverEffect
                 />
               </button>
             )}

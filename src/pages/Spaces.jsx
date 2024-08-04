@@ -50,7 +50,7 @@ function Spaces() {
     <section className="flex flex-col gap-6 h-full w-full">
       <div className="flex justify-center">
         <Button variant="contained" onClick={handleToggle}>
-          {toggle ? 'Owned Spaces' : 'Joined Spaces'}
+          {toggle ? 'Joined Spaces' : 'Owned Spaces'}
         </Button>
       </div>
 
@@ -65,23 +65,25 @@ function Spaces() {
         <section className="flex flex-wrap gap-5">
           {/* joined vs owned spaces */}
           {toggle
-            ? ownedSpaces.map((space) => (
+            ? joinedSpaces.map((space) => (
                 <Link to={`/spaces/${space.name}/${space._id}`} key={space._id}>
                   <DashItem
                     key={space._id}
-                    styling="w-[20rem] h-[14.5rem]"
+                    styling="w-[18rem] h-[14.5rem]"
                     heading={space.name}
                     headingStyling="self-center my-auto"
+                    allowHoverEffect
                   />
                 </Link>
               ))
-            : joinedSpaces.map((space) => (
+            : ownedSpaces.map((space) => (
                 <Link to={`/spaces/${space.name}/${space._id}`} key={space._id}>
                   <DashItem
                     key={space._id}
-                    styling="w-[20rem] h-[14.5rem]"
+                    styling="w-[18rem] h-[14.5rem]"
                     heading={space.name}
                     headingStyling="self-center my-auto"
+                    allowHoverEffect
                   />
                 </Link>
               ))}
@@ -90,19 +92,21 @@ function Spaces() {
           {toggle ? (
             <button onClick={handleOpen}>
               <DashItem
-                styling="w-[20rem] h-[14.5rem]"
-                heading="Create Space +"
+                styling="w-[18rem] h-[14.5rem]"
+                heading="Join Space +"
                 bgColor="bg-slate-300"
                 headingStyling="self-center my-auto"
+                allowHoverEffect
               />
             </button>
           ) : (
             <button onClick={handleOpen}>
               <DashItem
-                styling="w-[20rem] h-[14.5rem]"
-                heading="Join Space +"
+                styling="w-[18rem] h-[14.5rem]"
+                heading="Create Space +"
                 bgColor="bg-slate-300"
                 headingStyling="self-center my-auto"
+                allowHoverEffect
               />
             </button>
           )}
@@ -116,9 +120,9 @@ function Spaces() {
               aria-describedby="modal-modal-description"
             >
               <ModalBox
-                content={<CreateSpaceModalContent heading="Create New Space" />}
+                content={<JoinSpaceModalContent heading="Join Space" />}
                 height="h-auto"
-                width="w-[30rem]"
+                width="w-[27rem] p-5"
               />
             </Modal>
           ) : (
@@ -129,9 +133,9 @@ function Spaces() {
               aria-describedby="modal-modal-description"
             >
               <ModalBox
-                content={<JoinSpaceModalContent heading="Join Space" />}
+                content={<CreateSpaceModalContent heading="Create New Space" />}
                 height="h-auto"
-                width="w-[27rem]"
+                width="w-[33rem] p-8"
               />
             </Modal>
           )}

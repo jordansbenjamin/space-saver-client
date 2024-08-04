@@ -6,10 +6,10 @@ function ConfirmModal({heading, handleYes}) {
   const {handleClose} = useModal();
   return (
     <>
-      <h4 className="mt-[-.6rem] font-coplette text-3xl">{heading}</h4>
-      <p>This action cannot be undone.</p>
+      <h4 className="mt-[-.6rem] font-coplette text-3xl pt-4">{heading}</h4>
+      <p className='mt-[.6rem]'>This action cannot be undone.</p>
 
-      <div className="mb-[-1rem] mt-2 flex gap-6">
+      <div className="mb-[-1rem] flex gap-6 py-2">
         <Button variant="contained" color="error" onClick={handleClose}>
           No
         </Button>

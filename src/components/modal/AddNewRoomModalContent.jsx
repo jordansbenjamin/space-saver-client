@@ -42,11 +42,11 @@ function AddNewRoomModalContent({heading, spaceIdFromRooms}) {
 
   return (
     <>
-      <h4 className="mb-2 mt-[-.6rem] font-coplette text-3xl">{heading}</h4>
+      <h4 className="mb-2 mt-[-.6rem] font-coplette text-3xl pt-4">{heading}</h4>
       <form
         onSubmit={handleSubmit(onSubmit)}
         onReset={handleReset}
-        className="flex w-[23rem] flex-col items-center gap-1"
+        className="flex w-[23rem] flex-col items-center gap-1 p-4"
       >
         <Controller
           name="name"

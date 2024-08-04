@@ -10,10 +10,15 @@ function DashItem({
   isScroll,
   isDropdown,
   dropdownOptions,
+  allowHoverEffect
 }) {
+  // const base = `flex flex-col p-2 gap-5 rounded-xl border-2 ${
+  //   bgColor ? `${bgColor} border-gray-300` : 'border-slate-200 bg-slate-100'
+  // } shadow-xl`;
   const base = `flex flex-col p-2 gap-5 rounded-xl border-2 ${
-    bgColor ? `${bgColor} border-gray-300` : 'border-slate-200 bg-white'
-  } shadow-xl`;
+  bgColor ? `${bgColor} border-gray-300` : 'border-slate-200 bg-white'
+} ${allowHoverEffect ? 'shadow-custom-light transition-all duration-200 ease-custom hover:shadow-custom-hover hover:scale-95' : 'shadow-xl'}`;
+
 
   const baseHeading = `px-2 py-1 font-coplette text-xl`;
 
@@ -58,6 +63,7 @@ DashItem.propTypes = {
   isScroll: PropTypes.bool,
   isDropdown: PropTypes.bool,
   dropdownOptions: PropTypes.array,
+  allowHoverEffect: PropTypes.bool
 };
 
 export default DashItem;

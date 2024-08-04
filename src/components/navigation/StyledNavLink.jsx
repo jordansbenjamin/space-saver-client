@@ -8,7 +8,7 @@ function StyledNavLink({linkName, icon, path}) {
       // className={(isActive) =>
       //   `flex items-center hover:bg-blue-300 transition-all ${isActive ? 'bg-blue-200 rounded-lg p-2 pr-20 w-[12rem]' : ''}`
       // }
-      className="nav-hover flex w-[13rem] items-center rounded-lg px-3 py-3 pr-20"
+      className="nav-hover flex w-[13rem] items-center rounded-lg px-3 py-3 pr-20 transition-all duration-200 ease-custom hover:shadow-custom-hover hover:scale-95"
     >
       {icon}
       <span className="pl-3 text-lg">{linkName}</span>

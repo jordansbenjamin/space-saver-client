@@ -81,7 +81,11 @@ function CreateSpaceModalContent({heading}) {
           name="capacity"
           control={control}
           defaultValue=""
-          rules={{required: 'Capacity is required'}}
+          rules={{
+            required: 'Capacity is required',
+            valueAsNumber: true,
+            min: {value: 1, message: 'Capacity must be at least 1'},
+          }}
           render={({field}) => (
             <>
               <label className="self-start text-lg" htmlFor="capacity">
@@ -106,9 +110,7 @@ function CreateSpaceModalContent({heading}) {
           control={control}
           defaultValue=""
           rules={{
-            required: 'Description is required',
-            valueAsNumber: true,
-            min: {value: 1, message: 'Capacity must be at least 1'},
+            required: 'Description is required'
           }}
           render={({field}) => (
             <>
