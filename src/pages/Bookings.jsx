@@ -12,6 +12,7 @@ import {getBookings} from '../services/apiBookings.js';
 import {getAllRooms} from '../services/apiRooms.js';
 import {getUsers} from '../services/apiUsers.js';
 import MainSectionSpinner from '../components/spinner/MainSectionSpinner.jsx';
+import useAuth from '../auth/useAuth.js';
 
 /**
  * Bookings is a component responsible for displaying and managing bookings.
@@ -20,6 +21,8 @@ import MainSectionSpinner from '../components/spinner/MainSectionSpinner.jsx';
  * bookings, users, and rooms data.
  */
 function Bookings() {
+  const {user} = useAuth();
+  const userId = user._id;
   const {open, handleOpen, handleClose} = useModal();
   const [toggle, setToggle] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +44,7 @@ function Bookings() {
       identifier: `${user.first_name} ${user.last_name}`,
       userId: user._id,
     };
-  });
+  }).filter(user => user.userId !== userId);
 
   useEffect(() => {
     const fetchUsers = async () => {

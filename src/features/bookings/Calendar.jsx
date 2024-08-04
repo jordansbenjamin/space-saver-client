@@ -33,21 +33,20 @@ const Calendar = (props) => {
   }, [props.bookings]);
 
   const predefinedColours = [
-    '#5d1b1f8',
-    '#1abc9c',
-    '#2980b9',
-    '#2078b4',
-    '#1565c0',
-    '#0d47a1',
+    '#6D2B2F', // darker version of '#5d1b1f'
+    '#2BC6A3', // lighter version of '#1abc9c'
+    '#2A81B3', // slightly different shade of '#2980b9'
+    '#2A7EB9', // slightly different shade of '#2078b4'
+    '#1567C2', // slightly different shade of '#1565c0'
+    '#0E48A1', // darker version of '#0d47a1'
   ];
 
   const getCorporateColour = (roomId) => {
-    const hash = roomId.split('').reduce((acc, char) => {
-      acc = (acc << 5) - acc + char.charCodeAt(0);
-      return acc & acc;
-    }, 0);
-
-    return predefinedColours[Math.abs(hash) % predefinedColours.length];
+    let hash = 0;
+    for (let i = 0; i < roomId.length; i++) {
+      hash += roomId.charCodeAt(i);
+    }
+    return predefinedColours[hash % predefinedColours.length];
   };
 
   const getTextColour = (backgroundColour) => {
@@ -134,7 +133,7 @@ const Calendar = (props) => {
       <div style={{flex: 1, width: '100%', height: '100%', padding: '5%'}}>
         <FullCalendar
           plugins={[timeGridPlugin]}
-          initialView="timeGridDay"
+          initialView="timeGridWeek"
           weekends={true}
           events={events}
           eventContent={renderEventContent}
@@ -147,10 +146,11 @@ const Calendar = (props) => {
           scrollTime="09:00:00"
           height="100%"
           displayEventTime={true}
-          slotDuration="00:15:00"
+          slotDuration="00:30:00"
           slotEventOverlap={false}
           timeZone="local"
           datesSet={handleViewChange}
+          locale="en-GB"
         />
       </div>
     </section>

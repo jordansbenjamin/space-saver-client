@@ -2,7 +2,9 @@ import {Button, TextField} from '@mui/material';
 import {Link, useNavigate} from 'react-router-dom';
 import LogoDesktop from '../components/LogoDesktop';
 import {Controller, useForm} from 'react-hook-form';
-import {registerUser} from '../services/apiUsers';
+import {loginUser, registerUser} from '../services/apiUsers';
+import useAuth from '../auth/useAuth';
+import toast from 'react-hot-toast';
 
 /**
  * Register is a component for user registration.
@@ -10,6 +12,7 @@ import {registerUser} from '../services/apiUsers';
  * Upon successful registration, it navigates the user to the login page.
  */
 function Register() {
+  const {login} = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -19,8 +22,21 @@ function Register() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    await registerUser(data);
-    navigate('/login');
+    let user = {
+      email: data.email,
+      password: data.password,
+    };
+    let userRegister = await registerUser(data);
+    
+    if (userRegister) {
+      let jwt = await loginUser(user);
+      if (jwt) {
+        await login(jwt);
+        toast.success(`Welcome to SpaceSaver ${data.first_name}!`);
+        navigate('/');
+      }
+    }
+    // navigate('/login');
   };
 
   return (
@@ -129,6 +145,7 @@ function Register() {
                   error={!!errors.password}
                   helperText={errors.password?.message}
                   id="password"
+                  type='password'
                   placeholder="notpassword123"
                   variant="outlined"
                   size="small"

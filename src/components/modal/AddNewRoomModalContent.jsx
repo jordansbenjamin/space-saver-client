@@ -26,11 +26,11 @@ function AddNewRoomModalContent({heading, spaceIdFromRooms}) {
   };
 
   const onSubmit = async (data) => {
-    console.log('Submitted');
-    console.log(data);
+    // console.log('Submitted');
+    // console.log(data);
 
     const updatedData = {...data, space_id: spaceId || spaceIdFromRooms};
-    console.log(updatedData)
+    // console.log(updatedData)
 
     await createRoom(updatedData);
 

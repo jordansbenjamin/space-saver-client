@@ -87,7 +87,7 @@ function Home() {
     async function fetchData() {
       try {
         const data = await getAvailableTimeSlots();
-        console.log(data);
+        // console.log(data);
         if (data) {
           setMostUsedRoom(data.mostUsedRoom);
           setRoomsInUse(data.numberOfRoomsInUse);
@@ -194,7 +194,9 @@ function Home() {
               ) : (
                 <ListContent
                   contentType="upcomingBookings"
-                  bookings={bookings}
+                  bookings={bookings.filter(
+                    (booking) => new Date(booking.start_time) > new Date()
+                  )}
                 />
               )
             }
@@ -240,7 +242,7 @@ function Home() {
               content={
                 <Analytic
                   text="Most used room"
-                  size="text-xl"
+                  size="text-lg"
                   mostUsedRoom={mostUsedRoomName}
                 />
               }

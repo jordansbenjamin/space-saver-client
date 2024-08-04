@@ -91,6 +91,7 @@ function LogIn() {
                   helperText={errors.password?.message}
                   // required
                   id="password"
+                  type='password'
                   label="password"
                   variant="outlined"
                   fullWidth

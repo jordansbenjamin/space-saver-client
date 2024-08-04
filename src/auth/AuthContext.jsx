@@ -101,7 +101,7 @@ export function AuthProvider({children}) {
         const userId = decodedToken.userId;
         setAuthToken(token);
         const userDetails = await getUser(userId);
-        console.log(userDetails);
+        // console.log(userDetails);
 
         localStorage.setItem('token', token);
         setAuth({isAuthenticated: true, token, user: userDetails});

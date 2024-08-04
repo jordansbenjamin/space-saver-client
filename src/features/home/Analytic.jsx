@@ -11,18 +11,18 @@ function Analytic({text, size, mostUsedRoom, roomsInUse, usersInRooms}) {
       data = usersInRooms || 0;
       break;
     case 'Most used room':
-      data = mostUsedRoom || 'Not enough rooms';
+      data = mostUsedRoom || 'Not enough data';
       break;
     default:
       throw new Error(`Unrecognized text: ${text}`);
   }
 
   return (
-    <section className="flex h-full flex-col items-center justify-evenly">
+    <section className='flex h-full flex-col items-center justify-evenly'>
       <p className={`font-coplette ${size ? size : 'text-7xl'} text-blue-600`}>
         {data}
       </p>
-      <p className="text-lg">{text}</p>
+      <p className={`text-lg ${size ? 'mb-[-1.3rem]' : ''}`}>{text}</p>
     </section>
   );
 }

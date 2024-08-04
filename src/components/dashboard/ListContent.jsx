@@ -51,8 +51,15 @@ function ListContent({
         columns = ['Room', 'Next Available', 'Capacity'];
         // rows = Array.from(Array(15), () => createData(10310, '28/11/23', 4));
         // TODO: still need to fix hard coded next available
+        // rows = Array.from(rooms, (room) =>
+        //   createData(room.name, '28/11/23', room.capacity)
+        // );
         rows = Array.from(rooms, (room) =>
-          createData(room.name, '28/11/23', room.capacity)
+          createData(
+            room.name,
+            new Date().toLocaleDateString('en-AU'),
+            room.capacity
+          )
         );
       }
       break;
