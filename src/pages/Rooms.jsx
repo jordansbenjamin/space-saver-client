@@ -25,13 +25,22 @@ function Rooms() {
   const [rooms, setRooms] = useState([]);
   const [spacess, setSpaces] = useState([]);
 
-  const filteredBookedRooms = bookings.map((booking) => {
-    return {
-      name: booking.room_id.name,
-      _id: booking.room_id._id,
-    };
-  });
-  // console.log(bookings)
+  // const filteredBookedRooms = bookings.map((booking) => {
+  //   return {
+  //     name: booking.room_id.name,
+  //     _id: booking.room_id._id,
+  //   };
+  // });
+  const filteredBookedRooms = bookings.reduce((acc, booking) => {
+    if (!acc.some(room => room._id === booking.room_id._id)) {
+      acc.push({
+        name: booking.room_id.name,
+        _id: booking.room_id._id,
+      });
+    }
+    return acc;
+  }, []);
+  // console.log(filteredBookedRooms)
 
   useEffect(() => {
     const getSpaces = async () => {
@@ -113,7 +122,7 @@ function Rooms() {
               ''
             ) : (
               <div className="mx-auto mt-[15rem] self-center text-lg">
-                No rooms found in this space
+                No rooms found
               </div>
             )}
 

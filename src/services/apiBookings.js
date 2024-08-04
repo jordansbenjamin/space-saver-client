@@ -6,14 +6,21 @@ import api from './api';
  * @param {boolean} myBookingFilter - Filter bookings based on the current user's primary or invited status.
  * @returns {Promise<Array>} - A promise that resolves to an array of bookings.
  */
-export async function getBookings(myBookingFilter = null) {
+export async function getBookings(myBookingFilter = null, fromNow = null) {
   try {
     let response;
+    let url;
     if (myBookingFilter) {
-      response = await api.get(`/bookings?primary_user=true&invited_user=true`);
+      // response = await api.get(`/bookings?primary_user=true&invited_user=true`);
+       url = `/bookings?primary_user=true&invited_user=true`;
+    } else if (fromNow) {
+      url = `/bookings?primary_user=true&invited_user=true&start_time=(${new Date()})`;
     } else {
-      response = await api.get('/bookings');
+      // response = await api.get('/bookings');
+      url = '/bookings';
     }
+
+    response = await api.get(url);
 
     // Convert UTC times to local times
     const bookings = response.data.bookings.map((booking) => ({
@@ -98,7 +105,7 @@ export async function createBooking(bookingData) {
 
   try {
     const response = await api.post('/bookings', booking);
-    console.log(response);
+    // console.log(response);
     toast.success('Booking successfully created!');
     return response;
   } catch (error) {

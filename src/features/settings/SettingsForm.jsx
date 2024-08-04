@@ -1,20 +1,22 @@
 import PropTypes from 'prop-types';
-import {Button, TextField} from '@mui/material';
-import {Controller, useForm, useWatch} from 'react-hook-form';
+import { Button, TextField } from '@mui/material';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import useModal from '../../contexts/useModal';
 import useAuth from '../../auth/useAuth';
-import {updateUser} from '../../services/apiUsers';
+import { updateUser } from '../../services/apiUsers';
 import toast from 'react-hot-toast';
-import {useNavigate} from 'react-router-dom';
-// import {updateUser} from '../../services/apiUsers';
-function SettingsForm({isDisabled, onToggle, isToggle}) {
-  const {user, logout} = useAuth();
-  const {handleOpen} = useModal();
+import { useNavigate } from 'react-router-dom';
+
+function SettingsForm({ isDisabled, onToggle, isToggle }) {
+  const { user, logout } = useAuth();
+  const { handleOpen } = useModal();
+  const navigate = useNavigate();
+
   const {
     control,
     handleSubmit,
     reset,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues: {
       first_name: user?.first_name,
@@ -27,20 +29,10 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
     },
   });
 
-  const navigate = useNavigate();
-
-  // console.log(user);
-
-  const handleReset = () => {
-    reset({
-      first_name: user.first_name,
-      password: '',
-    });
-  };
-
   // Watch all fields
-  const values = useWatch({control});
+  const values = useWatch({ control });
 
+  // Function to handle form submission
   const onSubmit = async () => {
     const updatedData = Object.keys(values).reduce((acc, key) => {
       // Include field in updatedData if it's different from the default value
@@ -50,8 +42,6 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
       return acc;
     }, {});
 
-    // console.log('Updated Fields:', updatedData);
-
     try {
       await updateUser(user._id, updatedData);
 
@@ -59,17 +49,28 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
         logout();
         navigate('/login');
         toast.success('Please log in with your new credentials.');
-        
       } else {
         onToggle();
-        setTimeout(() => {
-          window.location.reload();
-        }, 800);
         toast.success('User details updated.');
       }
     } catch (err) {
       console.error(err);
+      toast.error('Failed to update user details.');
     }
+  };
+
+  // Function to handle form reset
+  const handleReset = () => {
+    onToggle();
+    reset({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      password: '',
+      country: user.country,
+      post_code: user.post_code,
+      position: user.position,
+    });
   };
 
   return (
@@ -85,7 +86,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
             name="first_name"
             control={control}
             defaultValue={user?.first_name}
-            render={({field}) => (
+            render={({ field }) => (
               <div className="mt-5 flex h-20 w-[17rem] flex-col gap-2">
                 <label htmlFor="first-name">First Name</label>
                 <TextField
@@ -105,7 +106,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
             name="last_name"
             control={control}
             defaultValue={user?.last_name}
-            render={({field}) => (
+            render={({ field }) => (
               <div className="mt-5 flex h-20 w-[17rem] flex-col gap-2">
                 <label htmlFor="last-name">Last Name</label>
                 <TextField
@@ -126,7 +127,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
           name="email"
           control={control}
           defaultValue={user?.email}
-          render={({field}) => (
+          render={({ field }) => (
             <div className="flex h-20 flex-col gap-2">
               <label htmlFor="email">Your email</label>
               <TextField
@@ -137,7 +138,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
                 variant="outlined"
                 disabled={isDisabled}
                 fullWidth
-                sx={{mb: '0.5rem'}}
+                sx={{ mb: '0.5rem' }}
               />
             </div>
           )}
@@ -147,7 +148,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
           name="password"
           control={control}
           defaultValue=""
-          render={({field}) => (
+          render={({ field }) => (
             <div className="flex h-20 flex-col gap-2">
               <label htmlFor="password">Your new password</label>
               <TextField
@@ -155,11 +156,12 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
                 error={!!errors.password}
                 helperText={errors.password?.message}
                 id="password"
+                type='password'
                 placeholder="some new password"
                 variant="outlined"
                 disabled={isDisabled}
                 fullWidth
-                sx={{mb: '0.5rem'}}
+                sx={{ mb: '0.5rem' }}
               />
             </div>
           )}
@@ -170,7 +172,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
             name="country"
             control={control}
             defaultValue={user?.country}
-            render={({field}) => (
+            render={({ field }) => (
               <div className="flex h-20 w-[17rem] flex-col gap-2">
                 <label htmlFor="country">Country</label>
                 <TextField
@@ -190,7 +192,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
             name="post_code"
             control={control}
             defaultValue={user?.post_code}
-            render={({field}) => (
+            render={({ field }) => (
               <div className=" flex h-20 w-[17rem] flex-col gap-2">
                 <label htmlFor="postcode">Post Code</label>
                 <TextField
@@ -211,7 +213,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
           name="position"
           control={control}
           defaultValue={user?.position}
-          render={({field}) => (
+          render={({ field }) => (
             <div className="mb-2 flex h-20 flex-col gap-2">
               <label htmlFor="position">Position</label>
               <TextField
@@ -222,7 +224,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
                 variant="outlined"
                 disabled={isDisabled}
                 fullWidth
-                sx={{mb: '0.5rem'}}
+                sx={{ mb: '0.5rem' }}
               />
             </div>
           )}
@@ -233,7 +235,7 @@ function SettingsForm({isDisabled, onToggle, isToggle}) {
             <Button variant="contained" color="error" onClick={handleOpen}>
               Delete Account
             </Button>
-            <Button variant="outlined" color="error" onClick={onToggle}>
+            <Button variant="outlined" color="error" onClick={handleReset}>
               Cancel
             </Button>
             <Button variant="contained" type="submit">

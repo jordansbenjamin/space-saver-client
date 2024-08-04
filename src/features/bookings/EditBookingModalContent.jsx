@@ -59,11 +59,11 @@ function EditBookingModalContent({heading, handleClose, booking, ...props}) {
   async function handleConfirmEdit() {
     try {
       const changes = {...formData};
-      console.log(changes);
+      // console.log(changes);
 
       if (Object.keys(changes).length > 0) {
         await editBooking(booking?._id, changes);
-        console.log('Confirmed Edit');
+        // console.log('Confirmed Edit');
       }
       // eslint-disable-next-line react/prop-types
       props.handleRefreshBookings();
@@ -76,7 +76,7 @@ function EditBookingModalContent({heading, handleClose, booking, ...props}) {
   async function handleRemoveBooking() {
     try {
       await deleteBooking(booking?._id);
-      console.log('Remove Booking');
+      // console.log('Remove Booking');
       handleClose();
     } catch (error) {
       console.error('Error removing booking:', error);

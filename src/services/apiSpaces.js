@@ -13,7 +13,7 @@ export async function getAllSpaces() {
     const {
       data: {spaces},
     } = await api.get(`/spaces`);
-    console.log(spaces);
+    // console.log(spaces);
     return spaces;
   } catch (err) {
     if (err.response) {
