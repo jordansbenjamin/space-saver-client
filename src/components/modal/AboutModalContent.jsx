@@ -15,7 +15,7 @@ function AboutModalContent() {
                     </Button> */}
                     <p >It was created as apart of a final project assignment for Coder Academy in 2023, built by 2 keen developers. Edward Dougherty was our commercial officer and backend developer, Jordan Benjamin was our designer and frontend developer.</p>
                 </div>
-                <h5 className="mt-8 font-coplette text-2xl">How it works</h5>
+                <h5 className="mt-10 font-coplette text-2xl self-start">How it works</h5>
                 <div className="mb-[-1rem] mt-2">
                     {/* <Button variant="contained" type="submit">
                         Join
@@ -34,8 +34,8 @@ function AboutModalContent() {
                     </Button> */}
                     <p>Each space has a variety of rooms which are tailored for the respective spaces. Please find some demo users (varying roles) login info from below to test the application. Or, create your own account and have fun!</p>
                 </div>
-                <h5 className="mt-[2rem] font-coplette text-2xl">Demo users login info</h5>
-                <div className="mb-[-2rem] mt-2 flex gap-8">
+                <h5 className="mt-[2rem] font-coplette text-2xl self-start">Demo users login info</h5>
+                <div className="mb-[-2rem] mt-2 flex gap-12">
                     {/* <Button variant="contained" type="submit">
                         Join
                     </Button> */}
@@ -73,7 +73,7 @@ function AboutModalContent() {
                         </p>
                     </div>
                 </div>
-                <h5 className="mt-[3rem] font-coplette text-2xl">Disclaimer</h5>
+                <h5 className="mt-[3rem] font-coplette text-2xl self-start">Disclaimer</h5>
                 <div className="mb-4 mt-2">
                     {/* <Button variant="contained" type="submit">
                         Join
