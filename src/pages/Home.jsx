@@ -11,12 +11,15 @@ import {getAllRooms} from '../services/apiRooms';
 import MainSectionSpinner from '../components/spinner/MainSectionSpinner';
 import {getAvailableTimeSlots, getBookings} from '../services/apiBookings';
 import EmptyDashContent from '../components/dashboard/EmptyDashContent';
+import useAuth from '../auth/useAuth';
 
 /**
  * Home is the main dashboard component displaying the summary of bookings, rooms, and other analytics.
  * It provides an overview of the most used room, rooms in use, users in rooms, and allows for quick booking actions.
  */
 function Home() {
+  const {user} = useAuth();
+  const userId = user._id;
   const [isLoading, setIsLoading] = useState(true);
   const [rooms, setRooms] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -53,12 +56,15 @@ function Home() {
   }
 
   const roomsUpdated = rooms.map((room) => {
+    // console.log("rooms:", rooms)
     return {
       name: room.name,
       nextAvailable: '28/11/23',
       capacity: room.capacity,
     };
   });
+
+  const userBookings = bookings.filter((booking) => booking.primary_user_id._id === userId)
 
   useEffect(() => {
     async function getRooms() {
@@ -125,6 +131,8 @@ function Home() {
     // fetchAvailabilities();
   }, []);
 
+  console.log(bookings)
+
   return (
     // SECTION AS GRID CONTAINER
     <section
@@ -146,7 +154,6 @@ function Home() {
               isNoBooking ? (
                 <EmptyDashContent message="No booking found" />
               ) : (
-
                 bookAgainDate && bookAgainName ? 
                 <Book
                   bookAgainName={bookAgainName}
@@ -178,7 +185,7 @@ function Home() {
               ) : (
                 <ListContent
                   contentType="rooms"
-                  toolTipTitle="Go to room"
+                  // toolTipTitle="Go to room"
                   rooms={roomsUpdated}
                 />
               )
@@ -189,12 +196,12 @@ function Home() {
           <DashItem
             heading="Upcoming Bookings"
             content={
-              bookings.length < 1 ? (
+              userBookings.length < 1 ? (
                 <EmptyDashContent message="No upcoming bookings" />
               ) : (
                 <ListContent
                   contentType="upcomingBookings"
-                  bookings={bookings.filter(
+                  bookings={userBookings.filter(
                     (booking) => new Date(booking.start_time) > new Date()
                   )}
                 />

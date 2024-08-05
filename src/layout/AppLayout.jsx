@@ -1,14 +1,18 @@
-import {Outlet} from 'react-router-dom';
-
+import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Main from './Main';
 import useAuthToken from '../hooks/useAuthToken';
 import FullPageSpinner from '../components/spinner/FullPageSpinner';
 import useAuth from '../auth/useAuth';
+import ModalBox from '../components/modal/ModalBox';
+import { Modal } from '@mui/material';
+import AboutModalContent from '../components/modal/AboutModalContent';
+import useModal from '../contexts/useModal';
 
 function AppLayout() {
-  const {isLoading} = useAuth();
+  const { isOpen, handleClose } = useModal();
+  const { isLoading } = useAuth();
   useAuthToken();
 
   if (isLoading) {
@@ -22,6 +26,22 @@ function AppLayout() {
       <Main>
         <Outlet />
       </Main>
+
+      {isOpen('aboutModal') && (
+        <Modal
+          open={isOpen('aboutModal')}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <ModalBox
+            content={<AboutModalContent />}
+            height="h-auto"
+            width="w-[60rem]"
+            topVal='50%'
+          />
+        </Modal>
+      )}
     </div>
   );
 }

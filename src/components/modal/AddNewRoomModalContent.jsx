@@ -123,7 +123,7 @@ function AddNewRoomModalContent({heading, spaceIdFromRooms}) {
         />
 
         <div className="mb-[-1rem] ml-6 mr-5 mt-2 flex gap-4">
-          <Button variant="contained" color="error" onClick={handleClose}>
+          <Button variant="contained" color="error" onClick={() => handleClose("newRoom")}>
             Cancel
           </Button>
           <Button variant="contained" type="submit">

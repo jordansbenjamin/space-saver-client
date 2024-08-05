@@ -13,7 +13,7 @@ function DashTableList({columns, rows, toolTipTitle}) {
   return (
     <TableContainer
       // component={Paper}
-      sx={{maxHeight: '100%'}}
+      sx={{height: '100%'}}
     >
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
@@ -39,7 +39,7 @@ function DashTableList({columns, rows, toolTipTitle}) {
                 key={idx + 1}
                 className="list-hover"
                 sx={{
-                  '&:last-child td, &:last-child th': {border: 0, pb: 3},
+                  '&:last-child td, &:last-child th': {border: 0, pb: 6},
                 }}
               >
                 {Object.values(row).map((item) => (

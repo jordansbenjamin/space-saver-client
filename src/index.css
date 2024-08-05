@@ -26,6 +26,10 @@ body {
   @apply transition-all hover:bg-blue-300 hover:text-black;
 }
 
+.book-hover {
+  @apply transition-all hover:bg-blue-300 hover:rounded-lg;
+}
+
 .list-hover {
-  @apply hover:bg-blue-300 transition-all cursor-pointer hover:rounded-xl
+  @apply hover:bg-blue-300 transition-all hover:rounded-xl
 }

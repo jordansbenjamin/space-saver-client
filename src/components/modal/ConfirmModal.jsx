@@ -7,7 +7,7 @@ function ConfirmModal({heading, handleYes}) {
   return (
     <>
       <h4 className="mt-[-.6rem] font-coplette text-3xl pt-4">{heading}</h4>
-      <p className='mt-[.6rem]'>This action cannot be undone.</p>
+      <p className='mt-[.2rem]'>This action cannot be undone.</p>
 
       <div className="mb-[-1rem] flex gap-6 py-2">
         <Button variant="contained" color="error" onClick={handleClose}>

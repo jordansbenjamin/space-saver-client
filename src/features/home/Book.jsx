@@ -9,7 +9,7 @@ function Book({isQuickBooking, ...props}) {
 
   return (
     <Link to="/bookings">
-      <section className="flex h-[10rem] justify-center items-center w-full gap-20">
+      <section className="flex h-[10rem] justify-center items-center w-full gap-20 book-hover">
         <div className='flex flex-col items-center'>
           <h4 className="font-coplette text-xl text-blue-800 sm:text-2xl md:text-3xl">
             Room

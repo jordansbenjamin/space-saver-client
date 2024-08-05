@@ -8,7 +8,7 @@ export function useAssignHandler(handleOpen, setModalName) {
         (option) =>
           (option.handleOpen = () => {
             setModalName(option.name);
-            handleOpen();
+            handleOpen(option.name);
           }
           
           )

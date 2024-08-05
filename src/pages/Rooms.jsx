@@ -19,7 +19,7 @@ import {getBookings} from '../services/apiBookings';
  */
 function Rooms() {
   const {user} = useAuth();
-  const {open, handleOpen, handleClose} = useModal();
+  const {isOpen, handleOpen, handleClose} = useModal();
   const [isLoading, setIsLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [rooms, setRooms] = useState([]);
@@ -128,9 +128,9 @@ function Rooms() {
             )}
 
             {isAdmin && menuOption !== 'Booked Rooms' && (
-              <button onClick={handleOpen}>
+              <button onClick={() => handleOpen("newRoom")}>
                 <DashItem
-                  styling="w-[18rem] h-[14.5rem]"
+                  styling="w-[18rem] h-[14.5rem] mb-10"
                   heading="Create room +"
                   bgColor="bg-slate-300"
                   headingStyling="self-center my-auto"
@@ -139,10 +139,10 @@ function Rooms() {
               </button>
             )}
 
-            {open && (
+            {isOpen("newRoom") && (
               <Modal
-                open={open}
-                onClose={handleClose}
+                open={isOpen("newRoom")}
+                onClose={() => handleClose("newRoom")}
                 // TODO: change aria for accessibility
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"

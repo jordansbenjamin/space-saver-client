@@ -41,8 +41,8 @@ function Register() {
 
   return (
     // TODO: Finish off responsive for mobile and tablet views
-    <main className="flex h-[63rem] flex-col items-center justify-center gap-6 bg-slate-100">
-      <div className="flex h-[.1rem] w-[23rem] flex-col justify-center">
+    <main className="flex h-screen flex-col items-center justify-center gap-6 bg-slate-100">
+      <div className="flex h-[.1rem] w-[23rem] flex-col justify-center mb-8">
         <LogoDesktop NoDivider />
       </div>
 
@@ -245,6 +245,9 @@ function Register() {
           </p>
         </div>
       </section>
+      <div className='absolute bottom-2 left-3'>
+        <p className='text-sm text-gray-600'>Version 1.1.1</p>
+      </div>
     </main>
   );
 }

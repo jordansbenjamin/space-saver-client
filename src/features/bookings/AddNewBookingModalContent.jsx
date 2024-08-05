@@ -22,28 +22,45 @@ function AddNewBookingModalContent({
 
   const onSubmit = async (data) => {
     try {
-      // await createBooking(data);
-      // console.log(data)
       const {room_id, ...rest} = data;
       const newBooking = {
         ...rest,
         room_id: room_id.roomId, // extract roomId from room_id object
       };
-      console.log(newBooking)
-      await createBooking(newBooking);
-      handleClose();
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 800);
+
+      const bookedTime = new Date(newBooking.startTime).toISOString().slice(0, 10);
+      const currentTime = new Date().toISOString().slice(0, 10);
+
+      if (bookedTime > currentTime) {
+        toast.error("You can only book a room for today. Please try again.");
+      } else {
+        const res = await createBooking(newBooking);
+        console.log("response:",res)
+        if (res.status === 400) {
+          const errMsg = res.data.error.split(' ').slice(0,3).join(' ');
+          // console.log(errMsg)
+          if (errMsg.includes('Overlapping')) {
+            throw new Error(errMsg + ". Please try again." || "Booking failed");
+          } else {
+            throw new Error(res.data.error || "Booking failed");
+          }
+        } else {
+          handleClose();
+          setTimeout(() => {
+            window.location.reload();
+          }, 800);
+        }
+      }
     } catch (err) {
-      toast.error(err.data.error);
-      console.error(err);
+      toast.error(err.message || "An error occurred during booking.");
+      // console.error(err);
     }
   };
 
+
   return (
     <>
-      <h4 className="mb-2 mt-[-.6rem] font-coplette text-3xl">{heading}</h4>
+      <h4 className="mb-2 mt-[.6rem] font-coplette text-3xl">{heading}</h4>
 
       <form
         onSubmit={handleSubmit(onSubmit)}

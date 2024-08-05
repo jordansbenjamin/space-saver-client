@@ -17,7 +17,7 @@ import MainSectionSpinner from '../components/spinner/MainSectionSpinner';
  */
 function Spaces() {
   const {user} = useAuth();
-  const {open, handleOpen, handleClose} = useModal();
+  const {isOpen, handleOpen, handleClose} = useModal();
   const [toggle, setToggle] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [ownedSpaces, setOwnedSpaces] = useState([]);
@@ -90,7 +90,7 @@ function Spaces() {
 
           {/* CONDITIONAL BTNS */}
           {toggle ? (
-            <button onClick={handleOpen}>
+            <button onClick={() => handleOpen("joinSpace")}>
               <DashItem
                 styling="w-[18rem] h-[14.5rem]"
                 heading="Join Space +"
@@ -100,9 +100,9 @@ function Spaces() {
               />
             </button>
           ) : (
-            <button onClick={handleOpen}>
+            <button onClick={() => handleOpen("createSpace")}>
               <DashItem
-                styling="w-[18rem] h-[14.5rem]"
+                styling="w-[18rem] h-[14.5rem] mb-10"
                 heading="Create Space +"
                 bgColor="bg-slate-300"
                 headingStyling="self-center my-auto"
@@ -112,10 +112,10 @@ function Spaces() {
           )}
 
           {/* CONDITIONAL MODALS */}
-          {open && toggle ? (
+          {isOpen("joinSpace") && toggle ? (
             <Modal
-              open={open}
-              onClose={handleClose}
+              open={isOpen("joinSpace")}
+              onClose={() => handleClose("joinSpace")}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
@@ -127,8 +127,8 @@ function Spaces() {
             </Modal>
           ) : (
             <Modal
-              open={open}
-              onClose={handleClose}
+              open={isOpen("createSpace")}
+              onClose={() => handleClose("createSpace")}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >

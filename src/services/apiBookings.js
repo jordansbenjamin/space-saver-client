@@ -109,7 +109,7 @@ export async function createBooking(bookingData) {
     toast.success('Booking successfully created!');
     return response;
   } catch (error) {
-    handleApiError(error, 'Error creating booking');
+    return handleApiError(error, 'Error creating booking');
   }
 }
 
@@ -145,7 +145,7 @@ export async function editBooking(bookingId, bookingData) {
     toast.success('Booking successfully updated!')
     return response;
   } catch (error) {
-    handleApiError(error, 'Error editing booking');
+    return handleApiError(error, 'Error editing booking');
   }
 }
 
@@ -204,6 +204,17 @@ export async function getAvailableTimeSlots() {
 export function handleApiError(err, customMessage = 'An error occurred') {
   if (err.response) {
     console.error(customMessage + ':', err.response || err);
-    toast.error(customMessage + '. Please try again later.');
+    // toast.error(customMessage + '. Please try again later.');
+    return err.response;
   }
+  // toast.error(customMessage + '. Please try again later.');
+  // return { status: 500, data: { error: customMessage } };
+  // console.error(customMessage + ':', err.response || err);
+  // toast.error(customMessage + '. Please try again later.');
+  // return {
+  //   status: err.response ? err.response.status : 500,
+  //   data: {
+  //     error: customMessage,
+  //   },
+  // };
 }

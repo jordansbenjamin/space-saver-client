@@ -1,16 +1,14 @@
-import {Button, Modal} from '@mui/material';
-// import DashItem from '../components/dashboard/DashItem';
-// import ListContent from '../components/dashboard/ListContent';
-import {AddRounded} from '@mui/icons-material';
+import { Button, Modal } from '@mui/material';
+import { AddRounded } from '@mui/icons-material';
 import useModal from '../contexts/useModal.js';
 import ModalBox from '../components/modal/ModalBox.jsx';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Calendar from '../features/bookings/Calendar.jsx';
 import AddNewBookingModalContent from '../features/bookings/AddNewBookingModalContent.jsx';
 import EditBookingModalContent from '../features/bookings/EditBookingModalContent.jsx';
-import {getBookings} from '../services/apiBookings.js';
-import {getAllRooms} from '../services/apiRooms.js';
-import {getUsers} from '../services/apiUsers.js';
+import { getBookings } from '../services/apiBookings.js';
+import { getAllRooms } from '../services/apiRooms.js';
+import { getUsers } from '../services/apiUsers.js';
 import MainSectionSpinner from '../components/spinner/MainSectionSpinner.jsx';
 import useAuth from '../auth/useAuth.js';
 
@@ -21,9 +19,9 @@ import useAuth from '../auth/useAuth.js';
  * bookings, users, and rooms data.
  */
 function Bookings() {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const userId = user._id;
-  const {open, handleOpen, handleClose} = useModal();
+  const { isOpen, handleOpen, handleClose } = useModal();
   const [toggle, setToggle] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -39,13 +37,16 @@ function Bookings() {
     };
   });
 
-  const userOptions = users.map((user) => {
-    return {
-      identifier: `${user.first_name} ${user.last_name}`,
-      userId: user._id,
-    };
-  }).filter(user => user.userId !== userId);
+  const userOptions = users
+    .map((user) => {
+      return {
+        identifier: `${user.first_name} ${user.last_name}`,
+        userId: user._id,
+      };
+    })
+    .filter((user) => user.userId !== userId);
 
+  // Fetch users on component mount
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -62,27 +63,29 @@ function Bookings() {
     fetchUsers();
   }, []);
 
+  // Toggle between "My Bookings" and "All Bookings"
   function handleToggle() {
-    // Toggling between "My Bookings" and "All Bookings",
     setToggle((t) => !t);
   }
+
+  // Open the modal for adding a new booking
   function handleAddNewBooking() {
-    // Open the modal for adding a new booking
     setSelectedBooking(null);
-    handleOpen();
+    handleOpen('addNewBookingModal');
   }
 
+  // Open the modal for editing a booking
   function handleEditBooking(booking) {
-    // Open the modal for editing a booking
     setSelectedBooking(booking);
-    handleOpen();
+    handleOpen('editBookingModal');
   }
 
+  // Refresh bookings list
   function handleRefreshBookings() {
     setRefresh(true);
-    handleOpen();
   }
 
+  // Fetch bookings when toggle or refresh state changes
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -97,6 +100,7 @@ function Bookings() {
     setRefresh(false);
   }, [toggle, refresh]);
 
+  // Fetch rooms on component mount
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -135,16 +139,10 @@ function Bookings() {
             />
           </section>
 
-          {/* <DashItem
-      heading="Upcoming Bookings"
-      content={<ListContent contentType="upcomingBookingsShort" />}
-      styling="col-span-full col-start-[16] row-end-[17] row-start-1 rounded-xl"
-    /> */}
-
-          {open && selectedBooking && (
+          {isOpen('editBookingModal') && selectedBooking && (
             <Modal
-              open={open && selectedBooking !== null}
-              onClose={handleClose}
+              open={isOpen('editBookingModal')}
+              onClose={() => handleClose('editBookingModal')}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
@@ -155,7 +153,7 @@ function Bookings() {
                     booking={selectedBooking}
                     handleClose={() => {
                       setSelectedBooking(null);
-                      handleClose();
+                      handleClose('editBookingModal');
                     }}
                     handleRefreshBookings={handleRefreshBookings}
                     roomOptions={rooms}
@@ -167,10 +165,10 @@ function Bookings() {
             </Modal>
           )}
 
-          {open && !selectedBooking && (
+          {isOpen('addNewBookingModal') && !selectedBooking && (
             <Modal
-              open={open && !selectedBooking}
-              onClose={handleClose}
+              open={isOpen('addNewBookingModal')}
+              onClose={() => handleClose('addNewBookingModal')}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
@@ -180,7 +178,7 @@ function Bookings() {
                     heading="Add New Booking"
                     handleClose={() => {
                       setSelectedBooking(null);
-                      handleClose();
+                      handleClose('addNewBookingModal');
                     }}
                     roomOptions={roomOptions}
                     userOptions={userOptions}
