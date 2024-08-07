@@ -122,7 +122,7 @@ function Spaces() {
               <ModalBox
                 content={<JoinSpaceModalContent heading="Join Space" />}
                 height="h-auto"
-                width="w-[27rem] p-5"
+                width="w-[27rem] p-3"
               />
             </Modal>
           ) : (
@@ -135,7 +135,7 @@ function Spaces() {
               <ModalBox
                 content={<CreateSpaceModalContent heading="Create New Space" />}
                 height="h-auto"
-                width="w-[33rem] p-8"
+                width="w-[33rem] p-4"
               />
             </Modal>
           )}

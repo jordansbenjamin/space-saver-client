@@ -5,6 +5,7 @@ import {TimePicker} from '@mui/x-date-pickers/TimePicker';
 import {Controller, useForm} from 'react-hook-form';
 import {createBooking} from '../../services/apiBookings';
 import toast from 'react-hot-toast';
+import dayjs from 'dayjs';
 // import api from '../../services/api';
 // import toast from 'react-hot-toast';
 
@@ -22,38 +23,47 @@ function AddNewBookingModalContent({
 
   const onSubmit = async (data) => {
     try {
-      const {room_id, ...rest} = data;
+      const { room_id, date, startTime, endTime, ...rest } = data;
+
+      // Combine date and time for startTime and endTime
+      const startDateTime = new Date(date);
+      const [startHours, startMinutes] = [
+        new Date(startTime).getHours(),
+        new Date(startTime).getMinutes(),
+      ];
+      startDateTime.setHours(startHours, startMinutes);
+
+      const endDateTime = new Date(date);
+      const [endHours, endMinutes] = [
+        new Date(endTime).getHours(),
+        new Date(endTime).getMinutes(),
+      ];
+      endDateTime.setHours(endHours, endMinutes);
+
       const newBooking = {
         ...rest,
         room_id: room_id.roomId, // extract roomId from room_id object
+        startTime: startDateTime.toISOString(),
+        endTime: endDateTime.toISOString(),
       };
 
-      const bookedTime = new Date(newBooking.startTime).toISOString().slice(0, 10);
-      const currentTime = new Date().toISOString().slice(0, 10);
-
-      if (bookedTime > currentTime) {
-        toast.error("You can only book a room for today. Please try again.");
-      } else {
-        const res = await createBooking(newBooking);
-        console.log("response:",res)
-        if (res.status === 400) {
-          const errMsg = res.data.error.split(' ').slice(0,3).join(' ');
-          // console.log(errMsg)
-          if (errMsg.includes('Overlapping')) {
-            throw new Error(errMsg + ". Please try again." || "Booking failed");
-          } else {
-            throw new Error(res.data.error || "Booking failed");
-          }
+      const res = await createBooking(newBooking);
+      // console.log("response:", res);
+      if (res.status === 400) {
+        const errMsg = res.data.error.split(' ').slice(0, 3).join(' ');
+        if (errMsg.includes('Overlapping')) {
+          throw new Error(errMsg + ". Please try again." || "Booking failed");
         } else {
-          handleClose();
-          setTimeout(() => {
-            window.location.reload();
-          }, 800);
+          throw new Error(res.data.error || "Booking failed");
         }
+      } else {
+        handleClose();
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
       }
     } catch (err) {
       toast.error(err.message || "An error occurred during booking.");
-      // console.error(err);
     }
   };
 
@@ -145,6 +155,7 @@ function AddNewBookingModalContent({
                   {...field}
                   id="date"
                   format="DD/MM/YY"
+                  minDate={dayjs()}
                   value={field.value || null}
                   onChange={(value) => {
                     field.onChange(value);

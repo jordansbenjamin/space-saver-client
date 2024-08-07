@@ -74,16 +74,16 @@ function AboutModalContent() {
                     </div>
                 </div>
                 <h5 className="mt-[3rem] font-coplette text-2xl self-start">Disclaimer</h5>
-                <div className="mb-4 mt-2">
+                <div className="mt-2">
                     {/* <Button variant="contained" type="submit">
                         Join
                     </Button> */}
-                    <p>SpaceSaver is currently undergoing an update. There are certain features which might be buggy. Notably, SpaceSaver is best viewed on a desktop/laptop. It is currently not mobile responsive.</p>
+                    <p>SpaceSaver is currently undergoing an update as an MVP app. There are certain features which might be buggy. Notably, SpaceSaver is best viewed on a desktop/laptop. It is currently not mobile responsive.</p>
                 </div>
             </div>
-            <div className='absolute bottom-2 left-3'>
+            {/* <div className='absolute bottom-2 left-3'>
                 <p className='text-sm text-gray-600'>Version 1.1.1</p>
-            </div>
+            </div> */}
         </>
     )
 }

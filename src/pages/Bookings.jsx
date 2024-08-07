@@ -11,6 +11,7 @@ import { getAllRooms } from '../services/apiRooms.js';
 import { getUsers } from '../services/apiUsers.js';
 import MainSectionSpinner from '../components/spinner/MainSectionSpinner.jsx';
 import useAuth from '../auth/useAuth.js';
+import toast from 'react-hot-toast';
 
 /**
  * Bookings is a component responsible for displaying and managing bookings.
@@ -70,8 +71,12 @@ function Bookings() {
 
   // Open the modal for adding a new booking
   function handleAddNewBooking() {
-    setSelectedBooking(null);
-    handleOpen('addNewBookingModal');
+    if (rooms.length < 1) {
+      toast.error("You need to join a Space with rooms before you can make a booking.")
+    } else {
+      setSelectedBooking(null);
+      handleOpen('addNewBookingModal');
+    }
   }
 
   // Open the modal for editing a booking

@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import ModalBox from '../components/modal/ModalBox';
 import AboutModalContent from '../components/modal/AboutModalContent';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 /**
  * LogIn is a component for user authentication.
@@ -19,6 +20,7 @@ function LogIn() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setAlertVisible(true);
@@ -39,19 +41,21 @@ function LogIn() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const jwt = await loginUser(data);
+    setIsLoading(true);
+    const jwt = await loginUser(data, setIsLoading);
 
     if (jwt) {
       await login(jwt);
       navigate('/');
-      toast.success('Logged in! Welcome to SpaceSaver.');
+      toast.success('Logged in! Welcome to SpaceSaver');
+      setIsLoading(false);
     }
   };
 
   return (
     // TODO: Finish off responsive for mobile and tablet views
-    <main className="flex h-screen flex-col items-center justify-center gap-6 bg-slate-100">
-      <Fade in={alertVisible} timeout={2000}>
+    <main className="flex h-screen flex-col items-center justify-center gap-6 bg-slate-100 overflow-auto">
+      <Fade in={alertVisible} timeout={4000}>
         <Alert
           severity="info"
           icon={false}
@@ -65,7 +69,7 @@ function LogIn() {
           Welcome to SpaceSaver! To begin, please read this:
         </Alert>
       </Fade>
-      <div className="flex h-[.1rem] w-[23rem] flex-col justify-center mb-8">
+      <div className="flex h-[.1rem] w-[23rem] flex-col justify-center mb-6">
         <LogoDesktop NoDivider />
       </div>
 
@@ -131,9 +135,12 @@ function LogIn() {
           />
 
           <div className="my-2">
-            <Button variant="contained" size="large" type="submit">
+            {/* <Button variant="contained" size="large" type="submit">
               Sign in to account
-            </Button>
+            </Button> */}
+            <LoadingButton loading={isLoading} variant="contained" size="large" type="submit">
+              Sign in to account
+            </LoadingButton>
           </div>
         </form>
 
@@ -141,7 +148,7 @@ function LogIn() {
           <p className="text-gray-700">
             Not registered?{' '}
             <span className="text-blue-700 hover:underline">
-              <Link to="/register">Create an account.</Link>
+              <Link to="/register">Create an account</Link>
             </span>
           </p>
         </div>
@@ -162,6 +169,7 @@ function LogIn() {
             height="h-auto"
             width="w-[60rem]"
             topVal='50%'
+            padX='px-5'
             handleCloseMod={handleClose}
           />
         </Modal>}

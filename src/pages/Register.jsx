@@ -1,10 +1,12 @@
-import {Button, TextField} from '@mui/material';
+import {TextField} from '@mui/material';
 import {Link, useNavigate} from 'react-router-dom';
 import LogoDesktop from '../components/LogoDesktop';
 import {Controller, useForm} from 'react-hook-form';
 import {loginUser, registerUser} from '../services/apiUsers';
 import useAuth from '../auth/useAuth';
 import toast from 'react-hot-toast';
+import { LoadingButton } from '@mui/lab';
+import { useState } from 'react';
 
 /**
  * Register is a component for user registration.
@@ -14,6 +16,7 @@ import toast from 'react-hot-toast';
 function Register() {
   const {login} = useAuth();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
@@ -22,6 +25,7 @@ function Register() {
   } = useForm();
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     let user = {
       email: data.email,
       password: data.password,
@@ -32,8 +36,9 @@ function Register() {
       let jwt = await loginUser(user);
       if (jwt) {
         await login(jwt);
-        toast.success(`Welcome to SpaceSaver ${data.first_name}!`);
         navigate('/');
+        toast.success(`Welcome to SpaceSaver ${data.first_name}!`);
+        setIsLoading(false);
       }
     }
     // navigate('/login');
@@ -41,12 +46,13 @@ function Register() {
 
   return (
     // TODO: Finish off responsive for mobile and tablet views
-    <main className="flex h-screen flex-col items-center justify-center gap-6 bg-slate-100">
-      <div className="flex h-[.1rem] w-[23rem] flex-col justify-center mb-8">
-        <LogoDesktop NoDivider />
-      </div>
+    <main className="flex p-4 h-screen flex-col items-center justify-center bg-slate-100 overflow-auto">
 
-      <section className="flex h-auto w-[28rem] flex-col gap-3 rounded-xl border-2 bg-white px-9 py-10 shadow-xl md:w-[40rem]">
+      <section className='flex items-center flex-col gap-6 mt-10'>
+          <div className="flex h-[.1rem] w-[23rem] flex-col justify-center mb-6">
+            <LogoDesktop NoDivider />
+          </div>
+      <div className="flex h-auto w-[28rem] flex-col gap-3 rounded-xl border-2 bg-white px-9 py-10 shadow-xl md:w-[40rem]">
         <h2 className="font-coplette text-4xl">Create an account</h2>
         <p className="text-[1.05rem] text-gray-700">
           To access the awesome features SpaceSaver has to offer, login to start
@@ -230,9 +236,12 @@ function Register() {
           />
 
           <div className="mb-3">
-            <Button variant="contained" size="large" type="submit">
+            {/* <Button variant="contained" size="large" type="submit">
               Create account
-            </Button>
+            </Button> */}
+            <LoadingButton loading={isLoading} variant="contained" size="large" type="submit">
+              Create account
+            </LoadingButton>
           </div>
         </form>
 
@@ -240,11 +249,13 @@ function Register() {
           <p className="text-gray-700">
             Already have an account?{' '}
             <span className="text-blue-700 hover:underline">
-              <Link to="/login">Login here.</Link>
+              <Link to="/login">Login here</Link>
             </span>
           </p>
         </div>
+      </div>
       </section>
+      
       <div className='absolute bottom-2 left-3'>
         <p className='text-sm text-gray-600'>Version 1.1.1</p>
       </div>

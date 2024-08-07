@@ -9,7 +9,7 @@ import api from './api';
  * @returns {Promise<string>} - A promise that resolves to the JWT token when login is successful.
  * @throws Will log the error and display a toast message if the API call fails.
  */
-export async function loginUser(data) {
+export async function loginUser(data, setIsLoading) {
   try {
     const {
       data: {jwt},
@@ -28,6 +28,7 @@ export async function loginUser(data) {
         // toast.error('Failed to login: ' + err.response.data.message);
         toast.error('Failed to login, incorrect email or password.');
       }
+      setIsLoading(false);
     }
   }
 }

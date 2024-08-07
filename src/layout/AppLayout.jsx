@@ -39,6 +39,7 @@ function AppLayout() {
             height="h-auto"
             width="w-[60rem]"
             topVal='50%'
+            padX='px-5'
           />
         </Modal>
       )}

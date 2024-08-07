@@ -27,6 +27,23 @@ function Home() {
   const [roomsInUse, setRoomsInUse] = useState(0);
   const [usersInRooms, setUsersInRooms] = useState(0);
   // const [availabilities, setAvailabilities] = useState([]);
+  
+  const userBookings = bookings.filter((booking) => booking.primary_user_id._id === userId);
+  const getUpcomingBookings = () => {
+    // console.log("user bookings",userBookings)
+    const upcomingUserBookings = userBookings.filter(booking => {
+      const bookedTime = new Date(booking.start_time).toISOString().slice(0, 10);
+      const currentTime = new Date().toISOString().slice(0, 10);
+
+      if (currentTime > bookedTime) {
+        return false
+      } else {
+        return true
+      }
+    })
+    // console.log("upcoming bookings",upcomingUserBookings)
+    return upcomingUserBookings.length > 1;
+  }
 
   let mostUsedRoomName = '';
   if (rooms && mostUsedRoom) {
@@ -36,7 +53,7 @@ function Home() {
     }
   }
 
-  let isNoBooking;
+  // let isNoBooking;
   // let bookAgainName;
   // let bookAgainDate;
   // if (bookings) {
@@ -54,6 +71,7 @@ function Home() {
       bookAgainDate = new Date(lastBooking.start_time).toLocaleDateString();
     }
   }
+  // console.log(bookAgainName)
 
   const roomsUpdated = rooms.map((room) => {
     // console.log("rooms:", rooms)
@@ -63,8 +81,6 @@ function Home() {
       capacity: room.capacity,
     };
   });
-
-  const userBookings = bookings.filter((booking) => booking.primary_user_id._id === userId)
 
   useEffect(() => {
     async function getRooms() {
@@ -131,8 +147,6 @@ function Home() {
     // fetchAvailabilities();
   }, []);
 
-  console.log(bookings)
-
   return (
     // SECTION AS GRID CONTAINER
     <section
@@ -151,7 +165,7 @@ function Home() {
             heading="Book Again"
             styling="col-start-1 col-end-[15] row-span-6"
             content={
-              isNoBooking ? (
+              !bookAgainName ? (
                 <EmptyDashContent message="No booking found" />
               ) : (
                 bookAgainDate && bookAgainName ? 
@@ -196,7 +210,7 @@ function Home() {
           <DashItem
             heading="Upcoming Bookings"
             content={
-              userBookings.length < 1 ? (
+              !getUpcomingBookings() ? (
                 <EmptyDashContent message="No upcoming bookings" />
               ) : (
                 <ListContent

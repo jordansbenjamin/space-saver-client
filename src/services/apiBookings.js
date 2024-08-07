@@ -99,8 +99,8 @@ export async function createBooking(bookingData) {
     title,
     invited_user_ids,
     description,
-    start_time: startTime.toISOString(),
-    end_time: endTime.toISOString(),
+    start_time: startTime,
+    end_time: endTime,
   };
 
   try {
