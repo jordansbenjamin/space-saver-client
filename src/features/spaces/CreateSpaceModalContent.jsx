@@ -3,9 +3,12 @@ import {Button, TextField} from '@mui/material';
 import useModal from '../../contexts/useModal';
 import {Controller, useForm} from 'react-hook-form';
 import {createSpace} from '../../services/apiSpaces';
+import {LoadingButton} from '@mui/lab';
+import {useState} from 'react';
 
-function CreateSpaceModalContent({heading}) {
+function CreateSpaceModalContent({heading, onSpaceCreated}) {
   const {handleClose} = useModal();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
@@ -23,11 +26,14 @@ function CreateSpaceModalContent({heading}) {
   };
 
   const onSubmit = async (data) => {
-    await createSpace(data);
-    handleClose();
-    setTimeout(() => {
-      window.location.reload();
-    }, 800);
+    setIsLoading(true);
+    const res = await createSpace(data);
+
+    if (res) {
+      setIsLoading(false);
+      onSpaceCreated();
+      handleClose();
+    }
   };
 
   return (
@@ -110,7 +116,7 @@ function CreateSpaceModalContent({heading}) {
           control={control}
           defaultValue=""
           rules={{
-            required: 'Description is required'
+            required: 'Description is required',
           }}
           render={({field}) => (
             <>
@@ -133,13 +139,16 @@ function CreateSpaceModalContent({heading}) {
           )}
         />
         <div className="mb-[-1rem] ml-auto mr-5 mt-3 flex w-[19rem] gap-4">
-          <Button variant="contained" color="error" onClick={handleClose}>
+          <Button disabled={isLoading} variant="contained" color="error" onClick={handleClose}>
             Cancel
           </Button>
           {/* TODO: either they get redirected to their new space or a modal pop ups displaying the access code */}
-          <Button variant="contained" type="submit">
+          {/* <Button variant="contained" type="submit">
             Create New Space
-          </Button>
+          </Button> */}
+          <LoadingButton loading={isLoading} variant="contained" type="submit">
+            Sign in to account
+          </LoadingButton>
         </div>
       </form>
     </>
@@ -148,6 +157,7 @@ function CreateSpaceModalContent({heading}) {
 
 CreateSpaceModalContent.propTypes = {
   heading: PropTypes.string,
+  onSpaceCreated: PropTypes.func,
 };
 
 export default CreateSpaceModalContent;

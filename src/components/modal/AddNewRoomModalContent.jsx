@@ -5,10 +5,13 @@ import useModal from '../../contexts/useModal';
 import {Controller, useForm} from 'react-hook-form';
 import {useParams} from 'react-router-dom';
 import {createRoom} from '../../services/apiRooms';
+import { LoadingButton } from '@mui/lab';
+import { useState } from 'react';
 
-function AddNewRoomModalContent({heading, spaceIdFromRooms}) {
+function AddNewRoomModalContent({heading, spaceIdFromRooms, onAddNewRoom}) {
   const {handleClose} = useModal();
   const {spaceId} = useParams();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
@@ -26,23 +29,30 @@ function AddNewRoomModalContent({heading, spaceIdFromRooms}) {
   };
 
   const onSubmit = async (data) => {
-    // console.log('Submitted');
-    // console.log(data);
+    setIsLoading(true);
+    try {
+      const updatedData = {...data, space_id: spaceId || spaceIdFromRooms};
 
-    const updatedData = {...data, space_id: spaceId || spaceIdFromRooms};
-    // console.log(updatedData)
+      const res = await createRoom(updatedData);
 
-    await createRoom(updatedData);
+      if (res) {
+        onAddNewRoom();
+        handleClose();
+      }
 
-    handleClose();
-    setTimeout(() => {
-      window.location.reload();
-    }, 800);
+    } catch(err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+    
   };
 
   return (
     <>
-      <h4 className="mb-2 mt-[-.6rem] font-coplette text-3xl pt-4">{heading}</h4>
+      <h4 className="mb-2 mt-[-.6rem] pt-4 font-coplette text-3xl">
+        {heading}
+      </h4>
       <form
         onSubmit={handleSubmit(onSubmit)}
         onReset={handleReset}
@@ -123,12 +133,17 @@ function AddNewRoomModalContent({heading, spaceIdFromRooms}) {
         />
 
         <div className="mb-[-1rem] ml-6 mr-5 mt-2 flex gap-4">
-          <Button variant="contained" color="error" onClick={() => handleClose("newRoom")}>
+          <Button
+            variant="contained"
+            color="error"
+            disabled={isLoading}
+            onClick={() => handleClose('newRoom')}
+          >
             Cancel
           </Button>
-          <Button variant="contained" type="submit">
+          <LoadingButton loading={isLoading} variant="contained" type="submit">
             Add Room
-          </Button>
+          </LoadingButton>
         </div>
       </form>
     </>
@@ -138,6 +153,7 @@ function AddNewRoomModalContent({heading, spaceIdFromRooms}) {
 AddNewRoomModalContent.propTypes = {
   heading: PropTypes.string,
   spaceIdFromRooms: PropTypes.string,
+  onAddNewRoom: PropTypes.func
 };
 
 export default AddNewRoomModalContent;

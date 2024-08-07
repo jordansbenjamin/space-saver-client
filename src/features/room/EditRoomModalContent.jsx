@@ -1,25 +1,23 @@
 import PropTypes from 'prop-types';
 // import Button from '../../components/buttons/Button';
-import {Button, Modal, TextField} from '@mui/material';
+import {Button, TextField} from '@mui/material';
 import useModal from '../../contexts/useModal';
-import ConfirmModal from '../../components/modal/ConfirmModal';
-import ModalBox from '../../components/modal/ModalBox';
+// import ConfirmModal from '../../components/modal/ConfirmModal';
+// import ModalBox from '../../components/modal/ModalBox';
 import {useEffect, useState} from 'react';
 import {Controller, useForm, useWatch} from 'react-hook-form';
-import {
-  deleteSingleRoom,
-  getSingleRoom,
-  updateRoom,
-} from '../../services/apiRooms';
-import {useNavigate, useParams} from 'react-router-dom';
+import {getSingleRoom, updateRoom} from '../../services/apiRooms';
+import {useParams} from 'react-router-dom';
 import MainSectionSpinner from '../../components/spinner/MainSectionSpinner';
+import {LoadingButton} from '@mui/lab';
 
-function EditRoomModalContent({heading}) {
-  const {open, handleOpen, handleClose} = useModal();
+function EditRoomModalContent({heading, onRoomEdited}) {
+  const {handleOpen, handleClose} = useModal();
   const {roomId} = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [deleteRoom, setDeleteRoom] = useState(false);
+  const [isBtnLoading, setIsBtnLoading] = useState(false);
+  // const [deleteRoom, setDeleteRoom] = useState(false);
   const [room, setRoom] = useState(null);
 
   const {
@@ -55,21 +53,22 @@ function EditRoomModalContent({heading}) {
   }, [roomId, reset]);
 
   function handleDeleteRoom() {
-    setDeleteRoom(true);
-    return handleOpen();
+    // setDeleteRoom(true);
+    return handleOpen('Confirm');
   }
 
-  const handleConfirmDeleteRoom = async () => {
-    await deleteSingleRoom(roomId);
-    setTimeout(() => {
-      navigate('/rooms');
-    }, 800);
-  };
+  // const handleConfirmDeleteRoom = async () => {
+  //   await deleteSingleRoom(roomId);
+  //   setTimeout(() => {
+  //     navigate('/rooms');
+  //   }, 800);
+  // };
 
   // Watch all fields
   const values = useWatch({control});
 
   const onSubmit = async () => {
+    setIsBtnLoading(true);
     const updatedData = Object.keys(values).reduce((acc, key) => {
       // Include field in updatedData if it's different from the default value
       if (values[key] !== control._defaultValues[key]) {
@@ -79,13 +78,16 @@ function EditRoomModalContent({heading}) {
     }, {});
 
     try {
-      await updateRoom(updatedData, roomId);
-      handleClose();
-      setTimeout(() => {
-        navigate('/rooms');
-      }, 800);
+      const res = await updateRoom(updatedData, roomId);
+      
+      if (res) {
+        onRoomEdited();
+        handleClose();
+      }
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsBtnLoading(false);
     }
   };
 
@@ -174,40 +176,51 @@ function EditRoomModalContent({heading}) {
               <Button
                 variant="contained"
                 color="error"
+                disabled={isBtnLoading}
                 onClick={handleDeleteRoom}
               >
                 Delete Room
               </Button>
-              <Button variant="outlined" color="error" onClick={handleClose}>
+              <Button
+                variant="outlined"
+                color="error"
+                disabled={isBtnLoading}
+                onClick={handleClose}
+              >
                 Cancel
               </Button>
-              <Button variant="contained" type="submit">
+              <LoadingButton
+                loading={isBtnLoading}
+                variant="contained"
+                type="submit"
+              >
                 Confirm
-              </Button>
+              </LoadingButton>
             </div>
           </form>
         )}
 
-        {deleteRoom && open && (
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <ModalBox
-              // TODO: heading should be default
-              content={
-                <ConfirmModal
-                  heading="Are you sure?"
-                  handleYes={handleConfirmDeleteRoom}
-                />
-              }
-              height="h-auto"
-              width="w-auto"
-            />
-          </Modal>
-        )}
+        {/* {deleteRoom && isOpen('Confirm') && (
+          
+        )} */}
+        {/* <Modal
+          open={isOpen('Confirm')}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <ModalBox
+            // TODO: heading should be default
+            content={
+              <ConfirmModal
+                heading="Are you sure?"
+                handleYes={handleConfirmDeleteRoom}
+              />
+            }
+            height="h-auto"
+            width="w-auto"
+          />
+        </Modal> */}
       </section>
     </>
   );
@@ -215,6 +228,7 @@ function EditRoomModalContent({heading}) {
 
 EditRoomModalContent.propTypes = {
   heading: PropTypes.string,
+  onRoomEdited: PropTypes.func,
 };
 
 export default EditRoomModalContent;

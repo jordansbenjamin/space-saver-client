@@ -22,12 +22,15 @@ export async function loginUser(data, setIsLoading) {
 
       if (err.response.status === 500) {
         toast.error('An error occurred on the server. Please try again later.');
-      } else if (err.response.status === 401) {
-        toast.error('Session expired. Please log in again.');
       } else {
         // toast.error('Failed to login: ' + err.response.data.message);
         toast.error('Failed to login, incorrect email or password.');
       }
+      
+      // else if (err.response.status === 401) {
+      //   toast.error('Session expired. Please log in again.');
+      // } 
+      
       setIsLoading(false);
     }
   }

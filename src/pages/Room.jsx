@@ -1,4 +1,4 @@
-import { Button, Modal } from '@mui/material';
+import {Button, Modal} from '@mui/material';
 import DashItem from '../components/dashboard/DashItem';
 import ListContent from '../components/dashboard/ListContent';
 import Description from '../features/space/Description';
@@ -8,25 +8,28 @@ import BookNow from '../features/room/BookNow.jsx';
 import CapacityRoom from '../features/room/CapacityRoom.jsx';
 import EditUsersModalContent from '../features/space/EditUsersModalContent.jsx';
 import EditRoomModalContent from '../features/room/EditRoomModalContent.jsx';
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { getSingleRoom } from '../services/apiRooms.js';
+import {Navigate, useParams} from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {deleteSingleRoom, getSingleRoom} from '../services/apiRooms.js';
 import useAuth from '../auth/useAuth.js';
 import MainSectionSpinner from '../components/spinner/MainSectionSpinner.jsx';
-import { getAvailableTimeSlots, getBookings } from '../services/apiBookings.js';
+import {getAvailableTimeSlots, getBookings} from '../services/apiBookings.js';
 import EmptyDashContent from '../components/dashboard/EmptyDashContent.jsx';
+import ConfirmModal from '../components/modal/ConfirmModal.jsx';
 
 function Room() {
-  const { open, handleOpen, handleClose, modalName, setModalName } = useModal();
-  const { roomId } = useParams();
-  const { user } = useAuth();
+  const {handleOpen, handleClose, modalName, isOpen} = useModal();
+  const {roomId} = useParams();
+  const {user} = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [capacity, setCapacity] = useState(0);
   const [description, setDescription] = useState('');
   const [admin, setAdmin] = useState('');
   const [availabilities, setAvailabilities] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   // const [users, setUsers] = useState([]);
   const isAdmin = admin === user._id;
+  // TODO: update this placeholder
   const isWoo = true;
 
   useEffect(() => {
@@ -45,9 +48,10 @@ function Room() {
 
         if (fetchedAvailabilities) {
           // console.log(fetchedAvailabilities)
-          const currentRoomTimeSlot = fetchedAvailabilities.availableTimeSlots.filter(
-            (room) => room.room_id === roomId
-          );
+          const currentRoomTimeSlot =
+            fetchedAvailabilities.availableTimeSlots.filter(
+              (room) => room.room_id === roomId
+            );
 
           if (currentRoomTimeSlot && currentRoomTimeSlot.length > 0) {
             // console.log(currentRoomTimeSlot)
@@ -69,27 +73,30 @@ function Room() {
         const fetchedBookings = await getBookings();
 
         if (fetchedBookings) {
-          console.log(fetchedBookings)
-          const usersInRoom = fetchedBookings.filter((booking) => booking.room_id._id === roomId);
-          console.log("Fetch users",usersInRoom)
+          // console.log(fetchedBookings)
+          const usersInRoom = fetchedBookings.filter(
+            (booking) => booking.room_id._id === roomId
+          );
+          // console.log("Fetch users",usersInRoom)
+          return usersInRoom;
         }
-      } catch(err) {
-        console.error(err)
+      } catch (err) {
+        console.error(err);
       }
-    }
+    };
 
     getRoom();
-    fetchBookings()
-  }, [roomId]);
+    fetchBookings();
+  }, [roomId, refresh]);
 
   const formattedAvailabilities = availabilities?.map((availability) => {
     const startTime = new Date(availability.available_start_time);
     const endTime = new Date(availability.available_end_time);
 
-    const dateOptions = { day: '2-digit', month: '2-digit', year: '2-digit' };
+    const dateOptions = {day: '2-digit', month: '2-digit', year: '2-digit'};
     const date = startTime.toLocaleDateString('en-AU', dateOptions);
 
-    const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+    const timeOptions = {hour: 'numeric', minute: '2-digit', hour12: true};
     const time = startTime.toLocaleTimeString('en-AU', timeOptions);
 
     const durationInMilliseconds = endTime - startTime;
@@ -105,15 +112,19 @@ function Room() {
     };
   });
 
-  // console.log(formattedAvailabilities)
-  // console.log(availabilities)
-
   function handleEditRoom() {
-    setModalName('Edit Room');
-    handleOpen();
+    handleOpen('Edit Room');
   }
 
-  function createUsersData(id, firstName, lastName, email, dateJoined, postCode, position) {
+  function createUsersData(
+    id,
+    firstName,
+    lastName,
+    email,
+    dateJoined,
+    postCode,
+    position
+  ) {
     return {
       id,
       firstName,
@@ -137,16 +148,34 @@ function Room() {
     )
   );
 
-  const renderModalContent = () => {
+  const handleConfirmDeleteRoom = async () => {
+    try {
+      await deleteSingleRoom(roomId);
+      setTimeout(() => {
+        Navigate('/rooms');
+      }, 800);
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  const renderModalContent = (modalName) => {
     switch (modalName) {
       case 'Edit Users':
         return (
           <EditUsersModalContent heading="Edit Users" rows={usersEditRows} />
         );
       case 'Edit Room':
-        return <EditRoomModalContent heading="Edit Room" />;
+        return <EditRoomModalContent heading="Edit Room" onRoomEdited={() => setRefresh(p => !p)} />;
+      case 'Confirm':
+        return (
+          <ConfirmModal
+            heading="Are you sure?"
+            handleYes={handleConfirmDeleteRoom}
+          />
+        );
       default:
-        return new Error('Incorrect modalName');
+        return null;
     }
   };
 
@@ -228,33 +257,18 @@ function Room() {
         </>
       )}
 
-      {modalName !== 'Edit Users' && open ? (
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <ModalBox
-            content={renderModalContent()}
-            height="h-auto"
-            width="w-auto"
-          />
-        </Modal>
-      ) : (
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <ModalBox
-            content={renderModalContent()}
-            height="h-[35.5rem]"
-            width="w-[63rem]"
-          />
-        </Modal>
-      )}
+      <Modal
+        open={isOpen(modalName)}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <ModalBox
+          content={renderModalContent(modalName)}
+          height="h-auto"
+          width="w-auto"
+        />
+      </Modal>
     </section>
   );
 }

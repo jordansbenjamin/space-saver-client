@@ -1,13 +1,17 @@
 import PropTypes from 'prop-types';
-import {Button, TextField} from '@mui/material';
+import {TextField} from '@mui/material';
 import {Controller, useForm} from 'react-hook-form';
 import {joinSpace} from '../../services/apiSpaces';
 import useModal from '../../contexts/useModal';
+import {useState} from 'react';
+import { LoadingButton } from '@mui/lab';
 // import toast from 'react-hot-toast';
 // import api from '../../services/api';
 
-function JoinSpaceModalContent({heading}) {
+function JoinSpaceModalContent({heading, onSpaceJoined}) {
   const {handleClose} = useModal();
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -21,15 +25,20 @@ function JoinSpaceModalContent({heading}) {
     });
   };
 
+  // TODO: Keep note: Good error handling format
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
-      await joinSpace(data.code);
-      handleClose();
-      setTimeout(() => {
-        window.location.reload();
-      }, 800);
+      const res = await joinSpace(data.code);
+
+      if (res) {
+        onSpaceJoined();
+        handleClose('joinSpace');
+      }
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,9 +74,9 @@ function JoinSpaceModalContent({heading}) {
           )}
         />
         <div className="mb-[-1rem]">
-          <Button variant="contained" type="submit">
+          <LoadingButton loading={isLoading} variant="contained" type="submit">
             Join
-          </Button>
+          </LoadingButton>
         </div>
       </form>
     </>
@@ -76,6 +85,7 @@ function JoinSpaceModalContent({heading}) {
 
 JoinSpaceModalContent.propTypes = {
   heading: PropTypes.string,
+  onSpaceJoined: PropTypes.func,
 };
 
 export default JoinSpaceModalContent;

@@ -23,7 +23,8 @@ function Rooms() {
   const [isLoading, setIsLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [spacess, setSpaces] = useState([]);
+  const [spaces, setSpaces] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   // const filteredBookedRooms = bookings.map((booking) => {
   //   return {
@@ -69,7 +70,7 @@ function Rooms() {
 
     getSpaces();
     fetchBookings();
-  }, []);
+  }, [refresh]);
 
   const bookedRooms = {
     name: 'Booked Rooms',
@@ -77,14 +78,14 @@ function Rooms() {
     rooms: filteredBookedRooms,
   };
 
-  const spaces = Array.from(spacess, (space) => ({
+  const spacesOptions = Array.from(spaces, (space) => ({
     id: space._id,
     name: space.name,
     admin: space.admin_id._id,
     rooms: rooms.filter((room) => room.space_id._id === space._id),
   }));
 
-  const options = [bookedRooms, ...spaces];
+  const options = [bookedRooms, ...spacesOptions];
   // console.log(options);
 
   const {menuOption} = useMenuOptionStore();
@@ -152,6 +153,7 @@ function Rooms() {
                     <AddNewRoomModalContent
                       heading="Add New Room"
                       spaceIdFromRooms={currentOption?.id}
+                      onAddNewRoom={() => setRefresh(p => !p)}
                     />
                   }
                   height="h-auto"

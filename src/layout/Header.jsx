@@ -30,7 +30,7 @@ function Header() {
   // eslint-disable-next-line no-unused-vars
   const getCurrentPeriod = () => {
     const currentTime = new Date().getHours();
-    console.log(currentTime)
+    // console.log(currentTime)
     if (currentTime >= 12 && currentTime < 18) {
       return 'Afternoon'
     } else if (currentTime >= 18) {

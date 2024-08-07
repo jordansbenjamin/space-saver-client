@@ -127,6 +127,7 @@ export async function joinSpace(inviteCode) {
       },
     } = await api.post(`/spaces/code/${inviteCode}`);
     toast.success(`Succesfully joined ${name}`);
+    return true;
   } catch (err) {
     if (err.response) {
       console.error('Space code error:', err.response || err);
@@ -138,6 +139,7 @@ export async function joinSpace(inviteCode) {
       } else {
         toast.error('Failed to join space: ' + err.response.data.message);
       }
+      return false;
     }
   }
 }

@@ -22,6 +22,7 @@ function Spaces() {
   const [isLoading, setIsLoading] = useState(true);
   const [ownedSpaces, setOwnedSpaces] = useState([]);
   const [joinedSpaces, setJoinedSpaces] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const getSpaces = async () => {
@@ -40,14 +41,20 @@ function Spaces() {
     };
 
     getSpaces();
-  }, [user._id]);
+  }, [user._id, refresh]);
+
+  const handleCreateSpace = () => {
+    // console.log(newSpace);
+    // setOwnedSpaces((prevSpaces) => [...prevSpaces, newSpace]);
+    setRefresh(p => !p)
+  };
 
   function handleToggle() {
     setToggle((toggled) => !toggled);
   }
 
   return (
-    <section className="flex flex-col gap-6 h-full w-full">
+    <section className="flex h-full w-full flex-col gap-6">
       <div className="flex justify-center">
         <Button variant="contained" onClick={handleToggle}>
           {toggle ? 'Joined Spaces' : 'Owned Spaces'}
@@ -90,7 +97,7 @@ function Spaces() {
 
           {/* CONDITIONAL BTNS */}
           {toggle ? (
-            <button onClick={() => handleOpen("joinSpace")}>
+            <button onClick={() => handleOpen('joinSpace')}>
               <DashItem
                 styling="w-[18rem] h-[14.5rem]"
                 heading="Join Space +"
@@ -100,7 +107,7 @@ function Spaces() {
               />
             </button>
           ) : (
-            <button onClick={() => handleOpen("createSpace")}>
+            <button onClick={() => handleOpen('createSpace')}>
               <DashItem
                 styling="w-[18rem] h-[14.5rem] mb-10"
                 heading="Create Space +"
@@ -112,28 +119,28 @@ function Spaces() {
           )}
 
           {/* CONDITIONAL MODALS */}
-          {isOpen("joinSpace") && toggle ? (
+          {isOpen('joinSpace') && toggle ? (
             <Modal
-              open={isOpen("joinSpace")}
-              onClose={() => handleClose("joinSpace")}
+              open={isOpen('joinSpace')}
+              onClose={() => handleClose('joinSpace')}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
               <ModalBox
-                content={<JoinSpaceModalContent heading="Join Space" />}
+                content={<JoinSpaceModalContent heading="Join Space" onSpaceJoined={handleCreateSpace} />}
                 height="h-auto"
                 width="w-[27rem] p-3"
               />
             </Modal>
           ) : (
             <Modal
-              open={isOpen("createSpace")}
-              onClose={() => handleClose("createSpace")}
+              open={isOpen('createSpace')}
+              onClose={() => handleClose('createSpace')}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
               <ModalBox
-                content={<CreateSpaceModalContent heading="Create New Space" />}
+                content={<CreateSpaceModalContent heading="Create New Space" onSpaceCreated={handleCreateSpace} />}
                 height="h-auto"
                 width="w-[33rem] p-4"
               />
