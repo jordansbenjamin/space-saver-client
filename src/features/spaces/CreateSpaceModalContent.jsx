@@ -147,7 +147,7 @@ function CreateSpaceModalContent({heading, onSpaceCreated}) {
             Create New Space
           </Button> */}
           <LoadingButton loading={isLoading} variant="contained" type="submit">
-            Sign in to account
+            Create Space
           </LoadingButton>
         </div>
       </form>
