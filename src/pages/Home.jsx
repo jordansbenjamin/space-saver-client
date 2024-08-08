@@ -19,7 +19,7 @@ import useAuth from '../auth/useAuth';
  */
 function Home() {
   const {user} = useAuth();
-  const userId = user._id;
+  const userId = user?._id;
   const [isLoading, setIsLoading] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -103,7 +103,7 @@ function Home() {
   }, []);
 
   const userBookings = bookings.filter(
-    (booking) => booking.primary_user_id._id === userId
+    (booking) => booking.primary_user_id?._id === userId
   );
   const getUpcomingBookings = () => {
     // console.log("user bookings",userBookings)
