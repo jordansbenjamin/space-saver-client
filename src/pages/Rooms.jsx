@@ -32,15 +32,18 @@ function Rooms() {
   //     _id: booking.room_id._id,
   //   };
   // });
-  const filteredBookedRooms = bookings.reduce((acc, booking) => {
-    if (!acc.some(room => room._id === booking.room_id._id)) {
-      acc.push({
-        name: booking.room_id.name,
-        _id: booking.room_id._id,
-      });
-    }
-    return acc;
-  }, []);
+  let filteredBookedRooms;
+  if (bookings) {
+    filteredBookedRooms = bookings.reduce((acc, booking) => {
+      if (!acc.some(room => room?._id === booking?.room_id?._id)) {
+        acc.push({
+          name: booking?.room_id?.name,
+          _id: booking?.room_id?._id,
+        });
+      }
+      return acc;
+    }, []);
+  }
   // console.log(filteredBookedRooms)
 
   useEffect(() => {
@@ -60,7 +63,7 @@ function Rooms() {
       try {
         const fetchedBookings = await getBookings(true);
 
-        if (fetchBookings) {
+        if (fetchedBookings) {
           setBookings(fetchedBookings);
         }
       } catch (err) {
@@ -79,20 +82,20 @@ function Rooms() {
   };
 
   const spacesOptions = Array.from(spaces, (space) => ({
-    id: space._id,
-    name: space.name,
-    admin: space.admin_id._id,
-    rooms: rooms.filter((room) => room.space_id._id === space._id),
+    id: space?._id,
+    name: space?.name,
+    admin: space?.admin_id?._id,
+    rooms: rooms.filter((room) => room.space_id?._id === space?._id),
   }));
 
   const options = [bookedRooms, ...spacesOptions];
   // console.log(options);
 
   const {menuOption} = useMenuOptionStore();
-  const currentOption = options.find((option) => option.name === menuOption);
+  const currentOption = options.find((option) => option?.name === menuOption);
   // console.log(currentOption);
 
-  const isAdmin = currentOption?.admin === user._id;
+  const isAdmin = currentOption?.admin === user?._id;
 
   return (
     <section className="flex h-full w-full flex-col gap-6">
