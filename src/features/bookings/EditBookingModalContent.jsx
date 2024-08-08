@@ -7,9 +7,13 @@ import Tag from '../../components/Tag';
 import {useState, useEffect} from 'react';
 import dayjs from 'dayjs';
 import {editBooking, deleteBooking} from '../../services/apiBookings';
+import {LoadingButton} from '@mui/lab';
 
-function EditBookingModalContent({heading, handleClose, booking, ...props}) {
+function EditBookingModalContent({heading, handleClose, booking, onEditBooking, ...props}) {
   const [toggle, setToggle] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
   const [formData, setFormData] = useState({
     title: '',
     room: '',
@@ -19,6 +23,7 @@ function EditBookingModalContent({heading, handleClose, booking, ...props}) {
     inviteUsers: [],
     description: '',
   });
+
   function handleToggle() {
     setToggle((t) => !t);
   }
@@ -44,6 +49,7 @@ function EditBookingModalContent({heading, handleClose, booking, ...props}) {
 
   useEffect(() => {
     if (booking) {
+      console.log(booking);
       setFormData({
         title: booking.title || '',
         room: booking.room_id?.name || '',
@@ -57,36 +63,50 @@ function EditBookingModalContent({heading, handleClose, booking, ...props}) {
   }, [booking]);
 
   async function handleConfirmEdit() {
+    setIsLoading(true);
+    setIsEdit(true);
     try {
       const changes = {...formData};
       // console.log(changes);
 
       if (Object.keys(changes).length > 0) {
-        await editBooking(booking?._id, changes);
+        const res = await editBooking(booking?._id, changes);
+        if (res) {
+          onEditBooking();
+          handleClose();
+        }
         // console.log('Confirmed Edit');
       }
       // eslint-disable-next-line react/prop-types
-      props.handleRefreshBookings();
-      handleClose();
+      // props.handleRefreshBookings();
     } catch (error) {
       console.error('Error confirming edit:', error);
+    } finally {
+      setIsLoading(false);
+      setIsEdit(false);
     }
   }
 
   async function handleRemoveBooking() {
+    setIsLoading(true);
+    setIsEdit(false);
     try {
       await deleteBooking(booking?._id);
       // console.log('Remove Booking');
+      onEditBooking();
       handleClose();
     } catch (error) {
       console.error('Error removing booking:', error);
+    } finally {
+      setIsLoading(false);
+      // setIsEdit(false);
     }
   }
 
   return (
     <>
       <h4 className="mb-2 mt-[-.6rem] font-coplette text-3xl">{heading}</h4>
-      <div className="flex w-full flex-col items-center gap-2 px-8">
+      <div className="flex w-full flex-col items-center gap-2 px-1">
         <div className="flex w-full gap-3">
           <div className="flex w-[16rem] flex-col">
             <label className="self-start text-lg" htmlFor="">
@@ -193,19 +213,31 @@ function EditBookingModalContent({heading, handleClose, booking, ...props}) {
 
       {toggle ? (
         <div className="ml-auto mr-5 flex gap-4">
-          <Button
+          <LoadingButton
             variant="contained"
             color="error"
+            loading={!isEdit && isLoading}
+            disabled={isEdit && isLoading}
             onClick={handleRemoveBooking}
           >
             Remove Booking
-          </Button>
-          <Button variant="outlined" color="error" onClick={handleToggle}>
+          </LoadingButton>
+          <Button
+            variant="outlined"
+            color="error"
+            disabled={isLoading}
+            onClick={handleToggle}
+          >
             Cancel
           </Button>
-          <Button variant="contained" onClick={handleConfirmEdit}>
+          <LoadingButton
+            variant="contained"
+            loading={isEdit && isLoading}
+            disabled={!isEdit && isLoading}
+            onClick={handleConfirmEdit}
+          >
             Confirm Edit
-          </Button>
+          </LoadingButton>
         </div>
       ) : (
         <div className="flex gap-4">
@@ -222,7 +254,8 @@ EditBookingModalContent.propTypes = {
   heading: PropTypes.string,
   handleClose: PropTypes.func,
   booking: PropTypes.object,
-  roomOptions: PropTypes.array
+  roomOptions: PropTypes.array,
+  onEditBooking: PropTypes.func
 };
 
 export default EditBookingModalContent;

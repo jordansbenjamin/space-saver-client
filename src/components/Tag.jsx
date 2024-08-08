@@ -51,6 +51,7 @@ const Tag = forwardRef(
       <Stack spacing={3} sx={{width: '100%'}}>
         <Autocomplete
           multiple={isMultiple}
+          disabled={isDisabled}
           id="tags"
           options={options.map((option) => option.identifier)}
           freeSolo

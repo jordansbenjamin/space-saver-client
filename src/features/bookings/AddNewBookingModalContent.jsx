@@ -6,6 +6,8 @@ import {Controller, useForm} from 'react-hook-form';
 import {createBooking} from '../../services/apiBookings';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
+import {LoadingButton} from '@mui/lab';
+import {useState} from 'react';
 // import api from '../../services/api';
 // import toast from 'react-hot-toast';
 
@@ -14,7 +16,10 @@ function AddNewBookingModalContent({
   handleClose,
   roomOptions,
   userOptions,
+  onNewBooking
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -22,8 +27,9 @@ function AddNewBookingModalContent({
   } = useForm();
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
-      const { room_id, date, startTime, endTime, ...rest } = data;
+      const {room_id, date, startTime, endTime, ...rest} = data;
 
       // Combine date and time for startTime and endTime
       const startDateTime = new Date(date);
@@ -52,21 +58,20 @@ function AddNewBookingModalContent({
       if (res.status === 400) {
         const errMsg = res.data.error.split(' ').slice(0, 3).join(' ');
         if (errMsg.includes('Overlapping')) {
-          throw new Error(errMsg + ". Please try again." || "Booking failed");
+          throw new Error(errMsg + '. Please try again.' || 'Booking failed');
         } else {
-          throw new Error(res.data.error || "Booking failed");
+          throw new Error(res.data.error || 'Booking failed');
         }
       } else {
         handleClose();
-        setTimeout(() => {
-          window.location.reload();
-        }, 800);
+        onNewBooking();
       }
     } catch (err) {
-      toast.error(err.message || "An error occurred during booking.");
+      toast.error(err.message || 'An error occurred during booking.');
+    } finally {
+      setIsLoading(false);
     }
   };
-
 
   return (
     <>
@@ -294,12 +299,12 @@ function AddNewBookingModalContent({
         />
 
         <div className="ml-auto mr-5 flex gap-4">
-          <Button variant="contained" color="error" onClick={handleClose}>
+          <Button variant="contained" color="error" disabled={isLoading} onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="contained" type="submit">
+          <LoadingButton variant="contained" type="submit" loading={isLoading}>
             Confirm Booking
-          </Button>
+          </LoadingButton>
         </div>
       </form>
     </>
@@ -311,6 +316,7 @@ AddNewBookingModalContent.propTypes = {
   handleClose: PropTypes.func,
   userOptions: PropTypes.array,
   roomOptions: PropTypes.array,
+  onNewBooking: PropTypes.func
 };
 
 export default AddNewBookingModalContent;

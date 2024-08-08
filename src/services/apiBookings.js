@@ -106,7 +106,6 @@ export async function createBooking(bookingData) {
   try {
     const response = await api.post('/bookings', booking);
     // console.log(response);
-    toast.success('Booking successfully created!');
     return response;
   } catch (error) {
     return handleApiError(error, 'Error creating booking');
@@ -122,7 +121,7 @@ export async function createBooking(bookingData) {
 export async function editBooking(bookingId, bookingData) {
   // Destructure bookingData object
   const {roomId, title, description, startTime, endTime} = bookingData;
-  console.log(bookingData);
+  // console.log(bookingData);
 
   // Convert times to UTC time
   const startUtcTime = new Date(startTime).toISOString();
@@ -138,7 +137,7 @@ export async function editBooking(bookingId, bookingData) {
   };
 
   // Testing log
-  console.log('Updated Booking Object:', updatedBooking);
+  // console.log('Updated Booking Object:', updatedBooking);
 
   try {
     const response = await api.put(`/bookings/${bookingId}`, updatedBooking);

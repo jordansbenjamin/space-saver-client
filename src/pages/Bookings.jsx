@@ -12,6 +12,7 @@ import { getUsers } from '../services/apiUsers.js';
 import MainSectionSpinner from '../components/spinner/MainSectionSpinner.jsx';
 import useAuth from '../auth/useAuth.js';
 import toast from 'react-hot-toast';
+import { LoadingButton } from '@mui/lab';
 
 /**
  * Bookings is a component responsible for displaying and managing bookings.
@@ -30,6 +31,7 @@ function Bookings() {
   const [refresh, setRefresh] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
+  const [isToggleLoading, setIsToggleLoading] = useState(false);
 
   const roomOptions = rooms.map((room) => {
     return {
@@ -66,7 +68,13 @@ function Bookings() {
 
   // Toggle between "My Bookings" and "All Bookings"
   function handleToggle() {
+    // setRefresh((p) => !p);
     setToggle((t) => !t);
+  }
+
+  const handleConfirmNewBooking = () => {
+    setRefresh(p => !p);
+    toast.success('Booking successfully created!');
   }
 
   // Open the modal for adding a new booking
@@ -85,13 +93,18 @@ function Bookings() {
     handleOpen('editBookingModal');
   }
 
-  // Refresh bookings list
-  function handleRefreshBookings() {
-    setRefresh(true);
+  const handleConfirmEditBooking = () => {
+    setRefresh(p => !p);
   }
+
+  // Refresh bookings list
+  // function handleRefreshBookings() {
+  //   setRefresh(p => !p);
+  // }
 
   // Fetch bookings when toggle or refresh state changes
   useEffect(() => {
+    setIsToggleLoading(true);
     const fetchBookings = async () => {
       try {
         const fetchedBookings = await getBookings(toggle);
@@ -99,10 +112,12 @@ function Bookings() {
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching bookings:', error);
+      } finally {
+        setIsToggleLoading(false);
       }
     };
     fetchBookings();
-    setRefresh(false);
+    // setRefresh(false);
   }, [toggle, refresh]);
 
   // Fetch rooms on component mount
@@ -131,9 +146,9 @@ function Bookings() {
       ) : (
         <>
           <div className="col-span-full col-start-1 row-span-1 flex flex-col items-center justify-center">
-            <Button variant="contained" onClick={handleToggle}>
+            <LoadingButton loading={isToggleLoading} variant="contained" onClick={handleToggle}>
               {toggle ? 'My Bookings' : 'All Bookings'}
-            </Button>
+            </LoadingButton>
           </div>
 
           <section className="col-span-full col-start-1 row-start-2 row-end-[17] rounded-xl border-2 bg-white shadow-xl">
@@ -160,12 +175,13 @@ function Bookings() {
                       setSelectedBooking(null);
                       handleClose('editBookingModal');
                     }}
-                    handleRefreshBookings={handleRefreshBookings}
                     roomOptions={rooms}
+                    // handleRefreshBookings={handleRefreshBookings}
+                    onEditBooking={handleConfirmEditBooking}
                   />
                 }
                 height="h-auto"
-                width="w-[38rem]"
+                width="w-[37rem]"
               />
             </Modal>
           )}
@@ -187,6 +203,7 @@ function Bookings() {
                     }}
                     roomOptions={roomOptions}
                     userOptions={userOptions}
+                    onNewBooking={handleConfirmNewBooking}
                   />
                 }
                 height="h-auto"

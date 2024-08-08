@@ -128,7 +128,7 @@ const Calendar = (props) => {
   return (
     <section
       data-testid="calendar"
-      className="flex h-full flex-col items-center justify-center"
+      className="flex h-full flex-col items-center justify-center hover:cursor-pointer"
     >
       <div style={{flex: 1, width: '100%', height: '100%', padding: '5%'}}>
         <FullCalendar
