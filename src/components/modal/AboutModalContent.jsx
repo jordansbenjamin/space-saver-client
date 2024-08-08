@@ -2,7 +2,7 @@ function AboutModalContent() {
     return (
         <>
             <h4 className="mt-2 font-coplette text-3xl">About</h4>
-            <div className="flex w-full flex-col items-center gap-2 text-[.95rem]">
+            <div className="flex w-full flex-col items-center gap-2 text-[.9rem]">
                 <div className="mb-[-1rem] mt-1">
                     {/* <Button variant="contained" type="submit">
                         Join
@@ -15,7 +15,7 @@ function AboutModalContent() {
                     </Button> */}
                     <p >It was created as apart of a final project assignment for Coder Academy in 2023, built by 2 keen developers. Edward Dougherty was our commercial officer and backend developer, Jordan Benjamin was our designer and frontend developer.</p>
                 </div>
-                <h5 className="mt-10 font-coplette text-2xl self-start">How it works</h5>
+                <h5 className="mt-10 font-coplette text-xl self-start">How it works</h5>
                 <div className="mb-[-1rem] mt-2">
                     {/* <Button variant="contained" type="submit">
                         Join
@@ -34,7 +34,7 @@ function AboutModalContent() {
                     </Button> */}
                     <p>Each space has a variety of rooms which are tailored for the respective spaces. Please find some demo users (varying roles) login info from below to test the application. Or, create your own account and have fun!</p>
                 </div>
-                <h5 className="mt-[2rem] font-coplette text-2xl self-start">Demo users login info</h5>
+                <h5 className="mt-[2rem] font-coplette text-xl self-start">Demo users login info</h5>
                 <div className="mb-[-2rem] mt-2 flex gap-12">
                     {/* <Button variant="contained" type="submit">
                         Join
@@ -73,12 +73,12 @@ function AboutModalContent() {
                         </p>
                     </div>
                 </div>
-                <h5 className="mt-[3rem] font-coplette text-2xl self-start">Disclaimer</h5>
+                <h5 className="mt-[3rem] font-coplette text-xl self-start">Disclaimer</h5>
                 <div className="mt-2">
                     {/* <Button variant="contained" type="submit">
                         Join
                     </Button> */}
-                    <p>SpaceSaver is currently undergoing an update as an MVP app. There are certain features which might be buggy. Notably, SpaceSaver is best viewed on a desktop/laptop. It is currently not mobile responsive.</p>
+                    <p>SpaceSaver is currently undergoing an update as an MVP app. There are certain features which might not be complete, polished or optimised. Notably, SpaceSaver is best viewed on a desktop/laptop. It is currently not mobile responsive.</p>
                 </div>
             </div>
             {/* <div className='absolute bottom-2 left-3'>

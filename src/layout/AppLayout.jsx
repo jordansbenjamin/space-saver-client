@@ -36,8 +36,8 @@ function AppLayout() {
         >
           <ModalBox
             content={<AboutModalContent />}
-            height="h-auto"
-            width="w-[60rem]"
+            // height="h-auto"
+            width="w-[55rem]"
             topVal='50%'
             padX='px-5'
           />

@@ -18,105 +18,109 @@ import Register from './pages/Register';
 import {AuthProvider} from './auth/AuthContext';
 import {Toaster} from 'react-hot-toast';
 import ProtectedRoute from './auth/ProtectedRoute';
+import UserProvider from './contexts/UserContext';
 
 function App() {
   return (
     <AuthProvider>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <ModalProvider>
-          <PageHeadingProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route element={<AppLayout />}>
-                  <Route index element={<Navigate replace to="home" />} />
-                  <Route
-                    path="home"
-                    element={
-                      <ProtectedRoute>
-                        <Home />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="bookings"
-                    element={
-                      <ProtectedRoute>
-                        <Bookings />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="spaces"
-                    element={
-                      <ProtectedRoute>
-                        <Spaces />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="spaces/:spaceName/:spaceId"
-                    element={
-                      <ProtectedRoute>
-                        <Space />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="rooms"
-                    element={
-                      <ProtectedRoute>
-                        <Rooms />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="rooms/:roomName/:roomId"
-                    element={
-                      <ProtectedRoute>
-                        <Room />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="settings"
-                    element={
-                      <ProtectedRoute>
-                        <Settings />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Route>
+      <UserProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <ModalProvider>
+            <PageHeadingProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route element={<AppLayout />}>
+                    <Route index element={<Navigate replace to="home" />} />
+                    <Route
+                      path="home"
+                      element={
+                        <ProtectedRoute>
+                          <Home />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="bookings"
+                      element={
+                        <ProtectedRoute>
+                          <Bookings />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="spaces"
+                      element={
+                        <ProtectedRoute>
+                          <Spaces />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="spaces/:spaceName/:spaceId"
+                      element={
+                        <ProtectedRoute>
+                          <Space />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="rooms"
+                      element={
+                        <ProtectedRoute>
+                          <Rooms />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="rooms/:roomName/:roomId"
+                      element={
+                        <ProtectedRoute>
+                          <Room />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="settings"
+                      element={
+                        <ProtectedRoute>
+                          <Settings />
+                        </ProtectedRoute>
+                      }
+                    />
+                  </Route>
 
-                <Route path="register" element={<Register />} />
-                <Route path="login" element={<LogIn />} />
-                <Route path="*" element={<PageNotFound />} />
-              </Routes>
-            </BrowserRouter>
+                  <Route path="register" element={<Register />} />
+                  <Route path="login" element={<LogIn />} />
+                  <Route path="*" element={<PageNotFound />} />
+                </Routes>
+              </BrowserRouter>
 
-            <Toaster
-              position="top-center"
-              gutter={12}
-              containerStyle={{margin: '8px'}}
-              toastOptions={{
-                success: {
-                  duration: 1500,
-                },
-                error: {
-                  duration: 5000,
-                },
-                style: {
-                  fontSize: '16px',
-                  maxWidth: '400px',
-                  padding: '16px 24px',
-                  // width: '100%'
-                  // backgroundColor: 'var(--color-grey-0)',
-                  // color: 'var(--color-grey-700)',
-                },
-              }}
-            />
-          </PageHeadingProvider>
-        </ModalProvider>
-      </LocalizationProvider>
+              <Toaster
+                position="top-center"
+                gutter={12}
+                containerStyle={{margin: '8px'}}
+                toastOptions={{
+                  success: {
+                    duration: 2000,
+                  },
+                  error: {
+                    duration: 5000,
+                  },
+                  style: {
+                    fontSize: '16px',
+                    // maxWidth: '400px',
+                    maxWidth: '100%',
+                    padding: '16px 24px',
+                    width: 'auto'
+                    // backgroundColor: 'var(--color-grey-0)',
+                    // color: 'var(--color-grey-700)',
+                  },
+                }}
+              />
+            </PageHeadingProvider>
+          </ModalProvider>
+        </LocalizationProvider>
+      </UserProvider>
     </AuthProvider>
   );
 }

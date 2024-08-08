@@ -3,10 +3,12 @@ import {usePageHeading} from '../contexts/usePageHeading';
 import {useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
 import AccountMenu from '../components/menu/AccountMenu';
-import useAuth from '../auth/useAuth';
+import useUserDetails from '../contexts/useUserDetails';
+// import useAuth from '../auth/useAuth';
 
 function Header() {
-  const {user} = useAuth();
+  // const {user} = useAuth();
+  const {userDetails: user} = useUserDetails();
   const {heading, setHeading} = usePageHeading();
   const {pathname} = useLocation();
   const pathnameArr = pathname.split('/');

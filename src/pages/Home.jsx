@@ -20,30 +20,108 @@ import useAuth from '../auth/useAuth';
 function Home() {
   const {user} = useAuth();
   const userId = user._id;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [mostUsedRoom, setMostUsedRoom] = useState('');
   const [roomsInUse, setRoomsInUse] = useState(0);
   const [usersInRooms, setUsersInRooms] = useState(0);
   // const [availabilities, setAvailabilities] = useState([]);
-  
-  const userBookings = bookings.filter((booking) => booking.primary_user_id._id === userId);
+
+  useEffect(() => {
+    async function getRooms() {
+      setIsLoading(true);
+      try {
+        const fetchedRooms = await getAllRooms();
+
+        if (fetchedRooms) {
+          setRooms(fetchedRooms);
+        } 
+      } catch(err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    async function fetchBookings() {
+      setIsLoading(true);
+      try {
+        const fetchedBookings = await getBookings();
+
+        if (fetchedBookings) {
+          setBookings(fetchedBookings);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    async function fetchData() {
+      setIsLoading(true);
+      try {
+        const data = await getAvailableTimeSlots();
+        // console.log(data);
+        if (data) {
+          setMostUsedRoom(data.mostUsedRoom);
+          setRoomsInUse(data.numberOfRoomsInUse);
+          setUsersInRooms(data.numberOfUsersInRooms.totalNumberOfUsers);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    // async function fetchAvailabilities() {
+    //   try {
+    //     const fetchedAvailabilities = await getAvailableTimeSlots();
+
+    //     if (fetchAvailabilities) {
+    //       console.log(fetchedAvailabilities);
+    //       // const currentRoomTimeSlot =
+    //       //   fetchedAvailabilities.availableTimeSlots.filter(
+    //       //     (room) => room.room_id === roomId
+    //       //   );
+
+    //       // if (currentRoomTimeSlot) {
+    //       //   setAvailabilities(currentRoomTimeSlot?.at(0)?.time_slots || []);
+    //       // }
+    //     }
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // }
+
+    fetchBookings();
+    getRooms();
+    fetchData();
+    // fetchAvailabilities();
+  }, []);
+
+  const userBookings = bookings.filter(
+    (booking) => booking.primary_user_id._id === userId
+  );
   const getUpcomingBookings = () => {
     // console.log("user bookings",userBookings)
-    const upcomingUserBookings = userBookings.filter(booking => {
-      const bookedTime = new Date(booking.start_time).toISOString().slice(0, 10);
+    const upcomingUserBookings = userBookings.filter((booking) => {
+      const bookedTime = new Date(booking.start_time)
+        .toISOString()
+        .slice(0, 10);
       const currentTime = new Date().toISOString().slice(0, 10);
 
       if (currentTime > bookedTime) {
-        return false
+        return false;
       } else {
-        return true
+        return true;
       }
-    })
+    });
     // console.log("upcoming bookings",upcomingUserBookings)
     return upcomingUserBookings.length > 1;
-  }
+  };
 
   let mostUsedRoomName = '';
   if (rooms && mostUsedRoom) {
@@ -81,71 +159,6 @@ function Home() {
       capacity: room.capacity,
     };
   });
-
-  useEffect(() => {
-    async function getRooms() {
-      const fetchedRooms = await getAllRooms();
-
-      if (fetchedRooms) {
-        setRooms(fetchedRooms);
-      }
-      setIsLoading(false);
-    }
-
-    async function fetchBookings() {
-      try {
-        const fetchedBookings = await getBookings();
-
-        if (fetchedBookings) {
-          setBookings(fetchedBookings);
-        }
-
-        setIsLoading(false);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    async function fetchData() {
-      try {
-        const data = await getAvailableTimeSlots();
-        // console.log(data);
-        if (data) {
-          setMostUsedRoom(data.mostUsedRoom);
-          setRoomsInUse(data.numberOfRoomsInUse);
-          setUsersInRooms(data.numberOfUsersInRooms.totalNumberOfUsers);
-        }
-        setIsLoading(false);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    // async function fetchAvailabilities() {
-    //   try {
-    //     const fetchedAvailabilities = await getAvailableTimeSlots();
-
-    //     if (fetchAvailabilities) {
-    //       console.log(fetchedAvailabilities);
-    //       // const currentRoomTimeSlot =
-    //       //   fetchedAvailabilities.availableTimeSlots.filter(
-    //       //     (room) => room.room_id === roomId
-    //       //   );
-
-    //       // if (currentRoomTimeSlot) {
-    //       //   setAvailabilities(currentRoomTimeSlot?.at(0)?.time_slots || []);
-    //       // }
-    //     }
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // }
-
-    fetchBookings();
-    getRooms();
-    fetchData();
-    // fetchAvailabilities();
-  }, []);
 
   return (
     // SECTION AS GRID CONTAINER

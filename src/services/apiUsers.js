@@ -4,7 +4,7 @@ import api from './api';
 /**
  * Attempts to log in a user using the provided credentials.
  * It makes an API POST request to the login endpoint and, on success, returns the JWT token.
- * 
+ *
  * @param {Object} data - The login credentials, typically including email and password.
  * @returns {Promise<string>} - A promise that resolves to the JWT token when login is successful.
  * @throws Will log the error and display a toast message if the API call fails.
@@ -26,11 +26,11 @@ export async function loginUser(data, setIsLoading) {
         // toast.error('Failed to login: ' + err.response.data.message);
         toast.error('Failed to login, incorrect email or password.');
       }
-      
+
       // else if (err.response.status === 401) {
       //   toast.error('Session expired. Please log in again.');
-      // } 
-      
+      // }
+
       setIsLoading(false);
     }
   }
@@ -40,7 +40,7 @@ export const registerUser = async (data) => {
   try {
     const res = await api.post('/users/register', data);
     toast.success('Registration successful!');
-    return res
+    return res;
   } catch (err) {
     if (err.response) {
       console.error('Register error:', err);
@@ -59,13 +59,15 @@ export const registerUser = async (data) => {
 /**
  * Fetches all user data from the server.
  * It makes an API GET request to retrieve all users and returns them.
- * 
+ *
  * @returns {Promise<Array>} - A promise that resolves to an array of user objects when the request is successful.
  * @throws Will log the error and display a toast message if the API call fails.
  */
 export async function getUsers() {
   try {
-    const {data: {users}} = await api.get(`/users`);
+    const {
+      data: {users},
+    } = await api.get(`/users`);
     return users;
   } catch (err) {
     if (err.response) {
@@ -83,7 +85,7 @@ export async function getUsers() {
 /**
  * Fetches data of a single user from the server by user ID.
  * If the request is successful, it returns the user object.
- * 
+ *
  * @param {string} userId - The ID of the user to fetch.
  * @returns {Promise<Object>} - A promise that resolves to a user object when the request is successful.
  * @throws Will log the error and display a toast message if the API call fails.
@@ -108,7 +110,7 @@ export async function getUser(userId) {
 /**
  * Updates an existing user's data on the server by user ID.
  * It makes an API PUT request to update the user and returns the updated user data.
- * 
+ *
  * @param {string} userId - The ID of the user to update.
  * @param {Object} data - The updated data for the user.
  * @returns {Promise<Object>} - A promise that resolves to the updated user object.
@@ -117,7 +119,7 @@ export async function getUser(userId) {
 export async function updateUser(userId, data) {
   try {
     const {data: userData} = await api.put(`/users/${userId}`, data);
-    console.log('Updated user data: ', userData);
+    // console.log('Updated user data: ', userData);
     return userData;
   } catch (err) {
     if (err.response) {
@@ -131,6 +133,23 @@ export async function updateUser(userId, data) {
         'Failed to update user settings: ',
         +err.response.data.message
       );
+    }
+  }
+}
+
+export async function deleteUser(userId) {
+  try {
+    const res = await api.delete(`/users/${userId}`);
+    return res
+  } catch (err) {
+    if (err.response) {
+      console.error('Delete user error:', err.response || err);
+    }
+
+    if (err.response.status === 500) {
+      toast.error('An error occurred on the server. Please try again later.');
+    } else {
+      toast.error('Failed to delete user: ', err.response.data.message);
     }
   }
 }

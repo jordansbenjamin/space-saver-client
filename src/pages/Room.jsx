@@ -8,7 +8,7 @@ import BookNow from '../features/room/BookNow.jsx';
 import CapacityRoom from '../features/room/CapacityRoom.jsx';
 import EditUsersModalContent from '../features/space/EditUsersModalContent.jsx';
 import EditRoomModalContent from '../features/room/EditRoomModalContent.jsx';
-import {Navigate, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {deleteSingleRoom, getSingleRoom} from '../services/apiRooms.js';
 import useAuth from '../auth/useAuth.js';
@@ -19,6 +19,7 @@ import ConfirmModal from '../components/modal/ConfirmModal.jsx';
 
 function Room() {
   const {handleOpen, handleClose, modalName, isOpen} = useModal();
+  const navigate = useNavigate();
   const {roomId} = useParams();
   const {user} = useAuth();
   const [isLoading, setIsLoading] = useState(true);
@@ -151,9 +152,7 @@ function Room() {
   const handleConfirmDeleteRoom = async () => {
     try {
       await deleteSingleRoom(roomId);
-      setTimeout(() => {
-        Navigate('/rooms');
-      }, 800);
+      navigate('/rooms');
     } catch(err) {
       console.error(err);
     }
