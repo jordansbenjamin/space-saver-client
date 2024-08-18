@@ -49,6 +49,7 @@ function Space() {
   const [description, setDescription] = useState('');
   const [rooms, setRooms] = useState([]);
 
+  const refresh = useSpaceStore((state) => state.refresh);
   const setRefresh = useSpaceStore((state) => state.toggleRefresh);
 
   const roomsUpdated = rooms.map((room) => {
@@ -136,7 +137,7 @@ function Space() {
 
   function handleConfirmRemoveSpace() {
     deleteSpace(spaceId);
-    setRefresh();
+    setRefresh(refresh);
     navigate('/spaces');
   }
 
