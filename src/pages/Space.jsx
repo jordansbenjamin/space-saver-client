@@ -27,6 +27,7 @@ import useAuth from '../auth/useAuth.js';
 import MainSectionSpinner from '../components/spinner/MainSectionSpinner.jsx';
 import {getAllRooms} from '../services/apiRooms.js';
 import EmptyDashContent from '../components/dashboard/EmptyDashContent.jsx';
+import useSpaceStore from '../store/spaceStore.js';
 
 /**
  * Space is a component that displays details about a specific space and its rooms.
@@ -47,6 +48,8 @@ function Space() {
   const [peopleCount, setPeopleCount] = useState(0);
   const [description, setDescription] = useState('');
   const [rooms, setRooms] = useState([]);
+
+  const setRefresh = useSpaceStore((state) => state.toggleRefresh);
 
   const roomsUpdated = rooms.map((room) => {
     return {
@@ -133,6 +136,7 @@ function Space() {
 
   function handleConfirmRemoveSpace() {
     deleteSpace(spaceId);
+    setRefresh();
     navigate('/spaces');
   }
 

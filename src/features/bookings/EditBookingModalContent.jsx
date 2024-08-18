@@ -8,6 +8,7 @@ import {useState, useEffect} from 'react';
 import dayjs from 'dayjs';
 import {editBooking, deleteBooking} from '../../services/apiBookings';
 import {LoadingButton} from '@mui/lab';
+import toast from 'react-hot-toast';
 
 function EditBookingModalContent({heading, handleClose, booking, onEditBooking, ...props}) {
   const [toggle, setToggle] = useState(false);
@@ -91,10 +92,13 @@ function EditBookingModalContent({heading, handleClose, booking, onEditBooking, 
     setIsLoading(true);
     setIsEdit(false);
     try {
-      await deleteBooking(booking?._id);
+      const res = await deleteBooking(booking?._id);
       // console.log('Remove Booking');
-      onEditBooking();
-      handleClose();
+      if (res) {
+        onEditBooking();
+        handleClose();
+        toast.success('Booking successfully removed!');
+      }
     } catch (error) {
       console.error('Error removing booking:', error);
     } finally {

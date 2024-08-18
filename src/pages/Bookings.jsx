@@ -146,17 +146,25 @@ function Bookings() {
       ) : (
         <>
           <div className="col-span-full col-start-1 row-span-1 flex flex-col items-center justify-center">
-            <LoadingButton loading={isToggleLoading} variant="contained" onClick={handleToggle}>
+            <LoadingButton
+              loading={isToggleLoading}
+              variant="contained"
+              onClick={handleToggle}
+            >
               {toggle ? 'My Bookings' : 'All Bookings'}
             </LoadingButton>
           </div>
 
           <section className="col-span-full col-start-1 row-start-2 row-end-[17] rounded-xl border-2 bg-white shadow-xl">
-            <Calendar
-              myBookingFilter={toggle}
-              bookings={bookings}
-              onEditBooking={handleEditBooking}
-            />
+            {isToggleLoading ? (
+              <MainSectionSpinner/>
+            ) : (
+              <Calendar
+                myBookingFilter={toggle}
+                bookings={bookings}
+                onEditBooking={handleEditBooking}
+              />
+            )}
           </section>
 
           {isOpen('editBookingModal') && selectedBooking && (

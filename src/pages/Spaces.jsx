@@ -9,6 +9,7 @@ import {Link} from 'react-router-dom';
 import {getAllSpaces} from '../services/apiSpaces';
 import useAuth from '../auth/useAuth';
 import MainSectionSpinner from '../components/spinner/MainSectionSpinner';
+import useSpaceStore from '../store/spaceStore';
 
 /**
  * Spaces is a component that displays a list of all spaces the user is associated with.
@@ -22,7 +23,10 @@ function Spaces() {
   const [isLoading, setIsLoading] = useState(true);
   const [ownedSpaces, setOwnedSpaces] = useState([]);
   const [joinedSpaces, setJoinedSpaces] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  // const [refresh, setRefresh] = useState(false);
+
+  const refresh = useSpaceStore((state) => state.refresh);
+  const setRefresh = useSpaceStore((state) => state.toggleRefresh);
 
   useEffect(() => {
     const getSpaces = async () => {
