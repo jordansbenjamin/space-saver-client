@@ -9,29 +9,31 @@ const Calendar = (props) => {
   const [currentView, setCurrentView] = useState('timeGridDay');
 
   useEffect(() => {
-    // eslint-disable-next-line react/prop-types
-    const formattedEvents = props.bookings.map((booking) => {
-      const firstName = booking.primary_user_id?.first_name || '';
-      const lastName = booking.primary_user_id?.last_name || '';
+    if (props.bookings && Array.isArray(props.bookings)) {
+      const formattedEvents = props.bookings.map((booking) => {
+        const firstName = booking.primary_user_id?.first_name || '';
+        const lastName = booking.primary_user_id?.last_name || '';
 
-      return {
-        id: booking._id,
-        title: booking.title,
-        description: booking.description,
-        primaryUser: firstName + ' ' + lastName[0],
-        room: booking.room_id.name,
-        start: booking.start_time,
-        end: booking.end_time,
-        roomId: booking.room_id._id,
-        eventBackgroundColor: getCorporateColour(booking.room_id._id),
-        textColour: getTextColour(getCorporateColour(booking.room_id._id)),
-      };
-    });
+        return {
+          id: booking?._id,
+          title: booking.title,
+          description: booking.description,
+          primaryUser: firstName + ' ' + lastName[0],
+          room: booking.room_id.name,
+          start: booking.start_time,
+          end: booking.end_time,
+          roomId: booking.room_id._id,
+          eventBackgroundColor: getCorporateColour(booking.room_id._id),
+          textColour: getTextColour(getCorporateColour(booking.room_id._id)),
+        };
+      });
 
-    setEvents(formattedEvents);
+      setEvents(formattedEvents);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.bookings]);
 
+  
   const predefinedColours = [
     '#6D2B2F', // darker version of '#5d1b1f'
     '#2BC6A3', // lighter version of '#1abc9c'
